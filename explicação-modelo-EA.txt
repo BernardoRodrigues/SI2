@@ -1,0 +1,8 @@
+RI1: Um revisor não pode rever um artigo de que tenha sido autor.
+RI2: Um revisor não pode rever um artigo que tenha sido escrito por autores da mesma instituição.
+RI3: Todas as variáveis com "date" no nome são datas.
+RI4: A variável "grade" (em Conference e na relão entre Article e Reviewer) tem valores de 0 a 100.
+RI5: A variável "accepted" em Article e a variável "grade" em Conference pode ser null.
+RI6: A variável "state" em ArticleState só pode ter os valores "em revisão", "aceite" e "rejeitado".
+RI6: A variável "grade" em Conference é calculada dinamicamente por tentativa e erro.
+
