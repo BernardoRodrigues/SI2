@@ -14,7 +14,7 @@ create table Conference (
 create table ArticleState (
 
 	[id] int identity (1, 1) primary key,
-	[state] nvarchar(256) not null check (state = 'em revisão' OR state = "aceite" OR state = "rejeitado")
+	[state] nvarchar(256) not null check (state = "em revisão" OR state = "aceite" OR state = "rejeitado")
 
 )
 
