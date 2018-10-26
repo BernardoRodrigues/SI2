@@ -16,27 +16,28 @@ create table Conference (
 	[year] int check ([year] > 0),
 	[acronym] nvarchar(128) not null,
 	[grade] int check (grade >= 0 AND grade <= 100),
-	[submissionDate] datetime not null,
+	[submissionDate] date not null,
 	primary key (name, [year])
 
 )
 
 create table ArticleState (
 
-	[id] int identity (1, 1) primary key,
-	[state] nvarchar(256) not null check (state IN('em revisão','aceite','rejeitado'))
+	[id] int identity (1, 1) primary key, -- ??
+	[state] nvarchar(256) not null check (state IN('Under Review','Accepted','Rejected'))
 
 )
 
+-- Maybe have title collumn for primary key 
 create table Article (
 
 	[id] int identity(1, 1) primary key,
 	[conferenceName] nvarchar(100),
 	[conferenceYear] int,
-	[stateId] int not null references ArticleState(id),
+	[stateId] int not null references ArticleState(id), -- ??
 	[summary] nvarchar(1024) not null,
 	[accepted] bit,
-	[submissionDate] datetime not null
+	[submissionDate] date not null
 	constraint fk_Article_Conference foreign key ([conferenceName],[conferenceYear]) references Conference
 
 )
@@ -84,7 +85,7 @@ create table ConferenceUser (
 	[conferenceName] nvarchar(100),
 	[conferenceYear] int,
 	[userEmail] nvarchar(256) references [User](email),
-	[registrationDate] datetime not null,
+	[registrationDate] date not null,
 	primary key([conferenceName], [conferenceYear], userEmail),
 	constraint fk_User_Conference foreign key ([conferenceName],[conferenceYear]) references Conference
 
@@ -99,6 +100,7 @@ create table ArticleAuthor (
 
 )
 
+-- check if Reviewer is in Conference ?
 create table ArticleReviewer (
 
 	[articleId] int references Article(id),
