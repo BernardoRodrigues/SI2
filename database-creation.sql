@@ -12,10 +12,10 @@ use SI2
 
 create table Conference (
 	
-	name nvarhcar(128),
-	[year] int check ({year] > 0),
+	name nvarchar(128),
+	[year] int check (year > 0),
 	acronym nvarchar(128) not null,
-	grade int check (grade >= 0 AND grade =< 100),
+	grade int check (grade >= 0 AND grade <= 100),
 	submissionDate datetime not null,
 	primary key (name, year)
 
@@ -31,13 +31,13 @@ create table ArticleState (
 create table Article (
 
 	id int identity(1, 1) primary key,
-	conferenceName nvarhcar(128),
-	conferenceYear int 
+	conferenceName nvarchar(128),
+	conferenceYear int, 
 	stateId int references ArticleState(id),
 	summary nvarchar(1024) not null,
 	accepted bit,
 	submissionDate datetime not null,
-	constraint fk_Article_Conference foreign key ([conferenceName],[conferenceYear]) references Conference
+	constraint fk_Article_Conference foreign key (conferenceName , conferenceYear) references Conference(name, [year])
 
 )
 
@@ -70,13 +70,13 @@ create table [User] (
 
 create table Author (
 
-	authorEmail nvarchar(256) primary key references User(email)
+	authorEmail nvarchar(256) primary key references [User](email)
 
 )
 
 create table Reviewer (
 
-	reviewerEmail nvarchar(256) primary key references User(email)
+	reviewerEmail nvarchar(256) primary key references [User](email)
 
 )
 
@@ -84,7 +84,7 @@ create table ConferenceUser (
 	
 	conferenceName nvarchar(128),
 	conferenceYear int,
-	userEmail nvarchar(256) references User(email),
+	userEmail nvarchar(256) references [User](email),
 	registrationDate datetime not null,
 	primary key(conferenceName, conferenceYear, userEmail),
 	constraint fk_User_Conference foreign key ([conferenceName],[conferenceYear]) references Conference
@@ -106,7 +106,7 @@ create table ArticleReviewer (
 	articleId int references Article(id),
 	reviewerEmail nvarchar(256) references Reviewer(reviewerEmail),
 	revisionText nvarchar(1024),
-	grade int check (grade >= 0 AND grade =< 100),
+	grade int check (grade >= 0 AND grade <= 100),
 	primary key (articleId, reviewerEmail)
 	
 )
