@@ -16,7 +16,7 @@ create table Conference (
 	[year] int check (year > 0),
 	acronym nvarchar(128) not null,
 	grade int check (grade >= 0 AND grade <= 100),
-	submissionDate datetime not null,
+	submissionDate date not null,
 	primary key (name, year)
 
 )
