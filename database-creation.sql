@@ -14,7 +14,7 @@ create table Conference (
 create table ArticleState (
 
 	id int identity (1, 1) primary key,
-	[state] nvarchar(256) not null check ([state] = "em revisão" OR [state] = "aceite" OR [state] = "rejeitado")
+	[state] nvarchar(256) not null check ([state] in ('Under Review', 'Accepted', 'Rejected'))
 
 )
 
@@ -71,7 +71,7 @@ create table Reviewer (
 
 create table ConferenceUser (
 	
-	conferenceName nvarchar(256) references Conference(name),
+	conferenceName nvarchar(128) references Conference(name),
 	conferenceYear int references Conference([year]),
 	userEmail nvarchar(256) references User(email),
 	registrationDate datetime not null,
