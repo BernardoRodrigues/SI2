@@ -1,5 +1,5 @@
 -- use master
-use si2
+use SI2
 
 -- Conference
 insert into Conference([name],[year], [acronym],[submissionDate]) values('Web Summit', 2015 , 'WS15', DATEFROMPARTS(2015,03,31))
@@ -12,9 +12,9 @@ insert into ArticleState([state]) values('Rejected')
 insert into ArticleState([state]) values('Under Review')
 
 --Institution
-insert into Institution([name], [address], [country], [acronym]) values ('Instituto Superior de Engenharia de Lisboa','Rua Conselheiro Emídio Navarro, 1 Lisboa','Portugal', 'ISEL')
+insert into Institution([name], [address], [country], [acronym]) values ('Instituto Superior de Engenharia de Lisboa','Rua Conselheiro EmÃ­dio Navarro, 1 Lisboa','Portugal', 'ISEL')
 insert into Institution([name], [address], [country], [acronym]) values ('Massachusetts Institute of Technology', '	Cambridge, Massachusetts, U.S','United States of America', 'MIT')
-insert into Institution([name], [address], [country], [acronym]) values ('Universidad Complutense de Madrid','Avda. de Séneca, 2 Madrid', 'Spain',' UCM')
+insert into Institution([name], [address], [country], [acronym]) values ('Universidad Complutense de Madrid','Avda. de SÃ©neca, 2 Madrid', 'Spain',' UCM')
 
 -- User
 insert into [User]([email], [institutionName], [name]) values ('0000@isel.ipl.pt', 'Instituto Superior de Engenharia de Lisboa', 'A')
