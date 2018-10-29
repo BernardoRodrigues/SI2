@@ -2,7 +2,7 @@ create database si2;
 
 create table Conference (
 	
-	name nvarhcar(256),
+	name nvarhcar(128),
 	[year] int check ({year] > 0),
 	acronym nvarchar(128) not null,
 	grade int check (grade >= 0 AND grade =< 100),
@@ -21,7 +21,7 @@ create table ArticleState (
 create table Article (
 
 	id int identity(1, 1) primary key,
-	conferenceName nvarhcar(256) not null references Conference(id),
+	conferenceName nvarhcar(128) not null references Conference(id),
 	conferenceYear int not null references Conference([year])
 	stateId int references ArticleState(id),
 	summary nvarchar(1024) not null,
