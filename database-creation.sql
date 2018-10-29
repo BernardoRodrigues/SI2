@@ -31,12 +31,13 @@ create table ArticleState (
 create table Article (
 
 	id int identity(1, 1) primary key,
-	conferenceName nvarhcar(128) not null references Conference(id),
-	conferenceYear int not null references Conference([year])
+	conferenceName nvarhcar(128),
+	conferenceYear int 
 	stateId int references ArticleState(id),
 	summary nvarchar(1024) not null,
 	accepted bit,
-	submissionDate datetime not null
+	submissionDate datetime not null,
+	constraint fk_Article_Conference foreign key ([conferenceName],[conferenceYear]) references Conference
 
 )
 
@@ -81,11 +82,12 @@ create table Reviewer (
 
 create table ConferenceUser (
 	
-	conferenceName nvarchar(128) references Conference(name),
-	conferenceYear int references Conference([year]),
+	conferenceName nvarchar(128),
+	conferenceYear int,
 	userEmail nvarchar(256) references User(email),
 	registrationDate datetime not null,
-	primary key(conferenceName, conferenceYear, userEmail)
+	primary key(conferenceName, conferenceYear, userEmail),
+	constraint fk_User_Conference foreign key ([conferenceName],[conferenceYear]) references Conference
 
 )
 
@@ -95,6 +97,7 @@ create table ArticleAuthor (
 	authorEmail nvarchar(256) references Author(authorEmail),
 	isResponsible bit not null,
 	primary key(articleId, authorEmail)
+	
 
 )
 
