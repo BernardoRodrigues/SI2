@@ -1,4 +1,14 @@
-create database si2;
+go
+if Exists(select * from sys.databases where name= 'SI2')
+begin
+	use master
+	drop database SI2
+end
+create database SI2
+
+go
+
+use SI2
 
 create table Conference (
 	
