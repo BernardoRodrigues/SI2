@@ -4,13 +4,14 @@ go
 
 create procedure GiveRoleToUser
 @email nvarchar(256),
-@isAthor bit
+@isAuthor bit
 as
+-- transaction needed ?
 begin transaction
 	begin try
-		if @isAthor = null
+		if @isAuthor = null
 			throw
-		if @isAthor = 1
+		if @isAuthor = 1
 			insert into Author (authorEmail) values (@email)
 		else
 			insert into Reviewer (reviewerEmail) values (@email)

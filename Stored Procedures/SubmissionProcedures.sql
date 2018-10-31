@@ -6,6 +6,7 @@ create procedure InsertFile
 @articleId int,
 @file varbinary(MAX)
 as
+-- tran needed ?
 begin transaction
 	begin try
 		insert into [File] values (articleId, [file], insertionDate) values (@articleId, @file, GETDATE())
@@ -23,14 +24,15 @@ create procedure InsertSubmission
 @conferenceYear int,
 @summary nvarchar(1024),
 @file varbinary(MAX)
+-- @articleId int output ??
 as
 begin transaction
 	begin try
 		declare @maxDate as datetime
-		@maxDate = select submissionDate from Conference where 
+		@maxDate = select submissionDate from Conference where --?
 		declare @id as int
 		insert into Article (conferenceName, conferenceYear, summary, submissionDate) 
-		output @articleId = Article.id
+		output @articleId = Article.id -- ver acima
 		values (@conferenceName, @conferenceYear, @summary, GETDATE())
 		
 		exec InsertFile @articleId = @id, @file = @file

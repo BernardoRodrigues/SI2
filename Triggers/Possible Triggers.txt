@@ -1,0 +1,18 @@
+Autores e revisores têm de se registar na conf
+	- Trigger quando se insere em Reviewer/Author para inserir tambem em User e ConferenceUser ??
+
+Quando se escolhe um presidente da conf
+	- Trigger para verificar se ele está a rever algum artigo que entre em conflito
+
+Quando se submete um artigo/revisão
+	- Trigger para verificar se a data é inferior à data limite
+
+Ao inserir uma revisão
+	- Trigger para ver se ainda estamos na data de submissão ?? 
+	- Trigger para ver se a nota inserida muda o estado da submissão
+
+Quando se submete um revisão
+	- Trigger para chamar ListCompatibleReviewersProcs
+
+Quando se insere novo ficheiro
+	- Trigger para ver se ainda está dentro da data limite

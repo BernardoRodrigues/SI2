@@ -9,6 +9,7 @@ create procedure UpdateConference
 @grade int,
 @submissionDate datetime
 as
+-- tran needed ?
 begin transaction
 	begin try	
 		update Conference

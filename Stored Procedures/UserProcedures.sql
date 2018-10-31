@@ -28,6 +28,7 @@ go
 create procedure DeleteUser
 @email nvarchar(256)
 as
+-- tran needed?
 begin transaction
 	begin try	
 		delete from [User]
@@ -46,10 +47,11 @@ create procedure UpdateUser
 @institutionName nvarchar(256),
 @name nvarchar(256)
 as
+-- tran needed?
 begin transaction
 	begin try	
 		update [User]
-		set name = @name, @institutionName = institutionName
+		set name = @name, institutionName = @institutionName
 		where email = @email
 		commit
 	end try

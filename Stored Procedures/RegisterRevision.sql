@@ -7,6 +7,7 @@ create procedure RegisterRevision
 @revisionText nvarchar(1024),
 @grade int
 as
+-- tran needed ?
 begin transaction
 	begin try
 		update ArticleReviewer
