@@ -17,12 +17,13 @@ create table Conference (
 	acronym nvarchar(128) not null,
 	grade int check (grade >= 0 AND grade <= 100),
 	submissionDate date not null,
+	-- revisionDate?
 	primary key (name, year)
 
 )
 
 create table ArticleState (
-
+	-- talvez mais um estado enquanto não é atribuido um revisor ?
 	id int identity (1, 1) primary key,
 	[state] nvarchar(256) not null check ([state] in ('Under Review', 'Accepted', 'Rejected'))
 

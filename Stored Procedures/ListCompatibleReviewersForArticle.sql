@@ -3,7 +3,7 @@ use SI2
 go
 
 create procedure GetCompatibleReviewersForArticle
-@articleId int
+@articleId int --, @out param to say if results exist
 as
 begin transaction
 	begin try

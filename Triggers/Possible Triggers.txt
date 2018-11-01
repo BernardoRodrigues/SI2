@@ -1,5 +1,6 @@
 Autores e revisores têm de se registar na conf
-	- Trigger quando se insere em Reviewer/Author para inserir tambem em User e ConferenceUser ??
+	- Trigger quando se insere em Reviewer/Author para inserir tambem em User e ConferenceUser ?? 
+		ou quando insere em user automaticamente inserir em conf
 
 Quando se escolhe um presidente da conf
 	- Trigger para verificar se ele está a rever algum artigo que entre em conflito
@@ -16,3 +17,6 @@ Quando se submete um revisão
 
 Quando se insere novo ficheiro
 	- Trigger para ver se ainda está dentro da data limite
+
+Quando se insere uma nota na conf
+	- Trigger sobre a coluna grade ??
