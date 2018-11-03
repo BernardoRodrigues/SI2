@@ -16,13 +16,15 @@ create table Conference (
 	[year] int check (year > 0),
 	acronym nvarchar(128) not null,
 	grade int check (grade >= 0 AND grade <= 100),
-	submissionDate datetime not null,
+	submissionDate date not null,
+	-- revisionDate? -- perguntar ao engenheiro
 	primary key (name, year)
 
 )
 
 create table ArticleState (
-
+	-- perguntar ao engenheiro e perguntar se podemos ser determinísticos (assumir que eles são postos por ordem)
+	-- talvez mais um estado enquanto não é atribuido um revisor ?
 	id int identity (1, 1) primary key,
 	[state] nvarchar(256) not null check ([state] in ('Under Review', 'Accepted', 'Rejected'))
 

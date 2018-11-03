@@ -3,10 +3,10 @@ use SI2
 go
 
 create procedure GetCompatibleReviewersForArticle
-@articleId int
+@articleId int --, @out param to say if results exist
 as
-begin transaction
-	begin try
+begin try
+	begin transaction
 		select [User].name as name, [User].email as email, [User].institutionName
 		from Reviewer
 		inner join [User] on ([User].email = Reviewer.reviewerEmail)
@@ -18,10 +18,21 @@ begin transaction
 			inner join Author on (Author.authorEmail = ArticleAuthor.authorEmail)
 			inner join [User] on ([User].email = Author.authorEmail)
 			where ArticleAuthor.articleId <> @articleId
+		-- usar um stored proc / func ?
 		) as Aux on Aux.email = [User].email
 		where Aux.institutionName != [User].institutionName
-	end try
-	begin catch
-		throw
-	end catch
+	commit transaction
+end try
+begin catch
+	declare @errorMessage nvarchar(max), 
+    @errorSeverity int, 
+    @errorState int;
+
+    select @errorMessage = ERROR_MESSAGE() + ' Line ' + cast(ERROR_LINE() as nvarchar(5)), @errorSeverity = ERROR_SEVERITY(), @errorState = ERROR_STATE();
+
+    if @@trancount > 0
+        rollback transaction;
+
+    raiserror (@errorMessage, @errorSeverity, @errorState);	
+end catch
 go
