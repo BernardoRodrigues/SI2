@@ -36,9 +36,9 @@ as
 				stateId = 
 					case
 						when @articleGrade < @grade
-							then 1
+							then 4
 						else
-							2
+							3
 						end
 			where Article.id = @articleId
 			fetch next from cur into @articleId, @articleGrade

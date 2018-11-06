@@ -9,10 +9,8 @@ as
 begin try
 	begin transaction
 		insert into ArticleReviewer(articleId, reviewerEmail) values (@articleId, @reviewerEmail)
-		declare @stateId as int
-		select @stateId = id from ArticleState where [state] = 'em revisão'
 		update Article
-		set stateId  = @stateId
+		set stateId  = 2
 		where id = @articleId
 	commit transaction
 end try

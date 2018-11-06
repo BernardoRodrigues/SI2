@@ -1,0 +1,1 @@
+perguntar ao engenheiro se os valores de ids em ArticleState podem ser determinísticos (se forem podemos retirar a coluna accepted de Article)

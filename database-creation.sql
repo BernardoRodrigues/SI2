@@ -25,8 +25,8 @@ create table Conference (
 create table ArticleState (
 	-- perguntar ao engenheiro e perguntar se podemos ser determinísticos (assumir que eles são postos por ordem)
 	-- talvez mais um estado enquanto não é atribuido um revisor ?
-	id int identity (1, 1) primary key,
-	[state] nvarchar(256) not null check ([state] in ('Under Review', 'Accepted', 'Rejected'))
+	id int primary key,
+	[state] nvarchar(256) not null check ([state] in ('Article Submited', 'Under Review', 'Accepted', 'Rejected'))
 
 )
 
