@@ -84,9 +84,9 @@ create table dbo.[User] (
 
 create table dbo.ConferenceUser (
 	conferenceId int,
-	userEmail nvarchar(256) references [User](email),
+	userId int references [User](id),
 	registrationDate datetime not null,
-	primary key(conferenceId, userEmail),
+	primary key(conferenceId, userId),
 	--president bit ??
 	constraint fk_User_Conference foreign key (conferenceId) references Conference(id)
 

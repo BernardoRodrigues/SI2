@@ -19,7 +19,8 @@ begin catch
     @errorSeverity int, 
     @errorState int;
 
-    select @errorMessage = ERROR_MESSAGE() + ' Line ' + cast(ERROR_LINE() as nvarchar(5)), @errorSeverity = ERROR_SEVERITY(), @errorState = ERROR_STATE();
+    select @errorMessage = 
+				ERROR_MESSAGE() + ' Line ' + cast(ERROR_LINE() as nvarchar(5)), @errorSeverity = ERROR_SEVERITY(), @errorState = ERROR_STATE();
 
     if @@trancount > 0
         rollback transaction;
