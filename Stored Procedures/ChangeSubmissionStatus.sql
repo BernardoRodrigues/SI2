@@ -3,8 +3,7 @@ use SI2
 go
 
 create procedure ChangeArticleStatus
-@conferenceName nvarchar(128),
-@conferenceYear int,
+@conferenceId int,
 @grade int
 as
 begin try
@@ -15,7 +14,7 @@ begin try
 				select Article.id, ArticleReviewer.grade
 				from Article 
 					inner join ArticleReviewer on (Article.id = ArticleReviewer.articleId)
-				where Article.conferenceName = @conferenceName AND Article.conferenceYear = @conferenceYear
+				where Article.conferenceId = @conferenceId
 				open cur
 				fetch next from cur into @articleId, @articleGrade
 				while @@FETCH_STATUS = 0
@@ -56,15 +55,14 @@ end catch
 go
 
 create procedure ChangeSubmissionStatus
-@conferenceName nvarchar(128),
-@conferenceYear int,
+@conferenceId int,
 @grade int
 as
 begin try
 	begin transaction
 		if @grade is null
-			select @grade = grade from Conference where [name] = @conferenceName AND [year] = @conferenceYear
-		exec ChangeArticleStatus @conferenceName, @conferenceYear, @grade
+			select @grade = grade from Conference where Conference.id = @conferenceId
+		exec ChangeArticleStatus @conferenceId, @grade
 	commit transaction
 end try
 begin catch

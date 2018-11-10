@@ -4,12 +4,12 @@ go
 
 create procedure InsertArticleAuthor
 @articleId int,
-@authorEmail nvarchar(256),
+@authorId int,
 @isResponsible bit
 as
 begin try
 	begin transaction
-		insert into ArticleAuthor (articleId, authorEmail, isResponsible) values (@articleId, @authorEmail, @isResponsible)
+		insert into ArticleAuthor (articleId, authorId, isResponsible) values (@articleId, @authorId, @isResponsible)
 	commit transaction
 end try
 begin catch

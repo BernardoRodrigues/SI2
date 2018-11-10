@@ -26,17 +26,16 @@ begin catch
 end catch
 go
 
-create type	email_array as table (
-	email nvarchar(256)	not null primary key,
+create type	authors as table (
+	authorId int primary key not null,
 	isResponsible bit not null,
 	articleId int
 )
 go
 
 create procedure InsertSubmission
-@authorsEmails email_array readonly,
-@conferenceName nvarchar(128),
-@conferenceYear int,
+@authors authors readonly,
+@conferenceId int,
 @summary nvarchar(1024),
 @file varbinary(MAX),
 @articleId int out
@@ -44,27 +43,28 @@ as
 begin try
 	begin transaction
 		declare @maxDate as datetime
-		select @maxDate = submissionDate from Conference where Conference.name = @conferenceName AND Conference.[year] = @conferenceYear
-		if (@maxDate < GETDATE())
+		select @maxDate = submissionDate from Conference where Conference.id = @conferenceId
+		if (@maxDate > GETDATE())
 			begin
 				declare @id as int
+				insert into Article (conferenceId, summary, submissionDate, stateId) 
+				values (@conferenceId, @summary, GETDATE(), 1)
 				select @articleId = SCOPE_IDENTITY()
-				insert into Article (conferenceName, conferenceYear, summary, submissionDate) 
-		
-				values (@conferenceName, @conferenceYear, @summary, GETDATE())
-				exec InsertFile @articleId = @id, @file = @file
-				update @authorsEmails
+				exec InsertFile @articleId, @file
+				declare @table as authors
+				insert into @table select * from @authors
+				update @table
 				set articleId = @articleId
-				declare @authorEmail as nvarchar(256)
+				declare @authorId as int
 				declare @isResponsible as bit
 				declare cur cursor local forward_only
-				for select * from @authorsEmails
+				for select * from @table
 				open cur
-				fetch next into @authorEmail, @isResponsible, @articleId
+				fetch next from cur into @authorId, @isResponsible, @articleId
 				while @@FETCH_STATUS = 0
 					begin
-						insert into ArticleAuthor(articleId, authorEmail, isResponsible) values (@articleId, @authorEmail, @isResponsible)
-						fetch next into @authorEmail, @isResponsible, @articleId
+						insert into ArticleAuthor(articleId, authorId, isResponsible) values (@articleId, @authorId, @isResponsible)
+						fetch next from cur into @authorId, @isResponsible, @articleId
 					end
 				close cur
 				deallocate cur
@@ -75,7 +75,6 @@ begin try
 				set @articleId = -1
 				raiserror('The submission date has already passed', 5, -1)
 			end
-		commit transaction
 end try
 begin catch
 	declare @errorMessage nvarchar(max), 
@@ -129,7 +128,9 @@ as
 begin try
 	begin transaction
 		update Article
-		set summary = @summary, stateId = @stateId, accepted = @accepted
+		set summary = isnull(@summary, summary),
+		 stateId = isnull(@stateId, stateId),
+		 accepted = isnull(@accepted, accepted)
 		where id = @articleId
 	commit transaction
 end try

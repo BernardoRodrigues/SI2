@@ -8,5 +8,7 @@ go
 
 create view dbo.vw_Reviewer
 as 
-	Select * from [User] U inner join dbo.ArticleReviewer R on (U.id = R.reviewerId)
+	Select [User].id as id, [User].name as name, [User].email as email, [User].institutionId as institutionId 
+	from [User] 
+		inner join dbo.ArticleReviewer on ([User].id = ArticleReviewer.reviewerId)
 go 

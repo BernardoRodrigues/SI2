@@ -11,12 +11,11 @@ on dbo.Conference
 for insert 
 as
 declare @name nvarchar(128)
-select @name = name from inserted  
 declare @year int
-select @year = year from inserted
-
+select @name = name, @year = [year] from inserted
 if Exists(Select C.name , C.[year] from Conference C where C.name = @name and C.year = @year)
-	-- some kind of message to warn 
-	rollback tran
-
+	begin
+        rollback transaction;
+		raiserror ('The combination of year and name must be unique', 10, -1);	
+	end
 go

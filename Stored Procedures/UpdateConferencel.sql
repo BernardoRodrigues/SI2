@@ -3,6 +3,7 @@ use SI2
 go
 
 create procedure UpdateConference
+@conferenceId int,
 @name nvarchar(256),
 @year int,
 @acronym nvarchar(128),
@@ -13,8 +14,12 @@ as
 begin try
 	begin transaction
 		update Conference
-		set acronym = @acronym, grade = @grade, submissionDate = @submissionDate
-		where name = @name AND [year] = @year
+		set acronym = isnull(@acronym, acronym), 
+		grade = isnull(@grade, grade), 
+		submissionDate = isnull(@submissionDate, submissionDate),
+		name = isnull(@name, name),
+		[year] = isnull(@year, [year])
+		where id = @conferenceId
 	commit transaction
 end try
 begin catch

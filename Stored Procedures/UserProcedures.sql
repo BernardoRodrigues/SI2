@@ -1,20 +1,22 @@
 use SI2
 
-go
 
+
+go
 
 create procedure InsertUser
 @email nvarchar(256),
-@institutionName nvarchar(256),
+@institutionId nvarchar(256),
 @name nvarchar(256),
-@conferenceName nvarchar(256),
-@conferenceYear int
+@conferenceId int
 as
 
 begin try
 	begin transaction
-		insert into [User] (email, institutionName, name) values (@email, @institutionName, @name)
-		insert into ConferenceUser (conferenceName, conferenceYear, userEmail, registrationDate) values (@conferenceName, @conferenceYear, @email, GETDATE())
+		declare @id as int
+		insert into [User] (email, institutionId, name) values (@email, @institutionId, @name)
+		select @id = SCOPE_IDENTITY()
+		insert into ConferenceUser (conferenceId, userId, registrationDate) values (@conferenceId, @id, GETDATE())
 	commit transaction
 end try
 begin catch
@@ -32,22 +34,18 @@ end catch
 go
 
 create procedure DeleteUser
-@email nvarchar(256) not null
+@id int
 as
 begin try	
 	begin transaction
 		delete from ConferenceUser
-		where userEmail = @email
+		where userId = @id
 		delete from ArticleReviewer
-		where reviewerEmail = @email
+		where reviewerId = @id
 		delete from ArticleAuthor
-		where authorEmail = @email
-		delete from Reviewer
-		where reviewerEmail = @email
-		delete from Author
-		where authorEmail = @email
+		where authorId = @id
 		delete from [User]
-		where [User].email = @email	
+		where [User].id = @id
 	commit transaction
 end try
 begin catch
@@ -65,16 +63,19 @@ end catch
 go
 
 create procedure UpdateUser
+@id int,
 @email nvarchar(256),
-@institutionName nvarchar(256),
+@institutionId int,
 @name nvarchar(256)
 as
--- tran needed?
 begin try	
 	begin transaction
 		update [User]
-		set name = @name, institutionName = @institutionName
-		where email = @email
+		set 
+		name = isnull(@name, name), 
+		institutionId = isnull(@institutionId, institutionId), 
+		email = isnull(@email, email)
+		where id = @id
 	commit transaction
 end try
 begin catch
