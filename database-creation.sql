@@ -55,7 +55,7 @@ create table dbo.[File] (
 
 create table dbo.Institution (
 	id int identity(1,1) primary key,
-	name nvarchar(256) , --primary key
+	name nvarchar(256) unique, --primary key
 	address nvarchar(256) not null,
 	country nvarchar(128) not null,
 	acronym nvarchar(128)
