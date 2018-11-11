@@ -3,6 +3,7 @@ use SI2
 go
 
 prepare_user_insertion:
+set nocount on
 declare @date as datetime
 select @date = datefromparts(2018, 12, 20)
 insert into Conference (name, year, acronym, submissionDate)
@@ -29,4 +30,5 @@ delete from Institution
 dbcc checkident ('Institution', RESEED, 0);
 dbcc checkident ('User', RESEED, 0);
 dbcc checkident ('Conference', RESEED, 0);
+set nocount off
 GO

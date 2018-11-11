@@ -1,6 +1,7 @@
 use SI2
 
 prepare_conference_update:
+set nocount on
 declare @date as datetime
 select @date = datefromparts(2018, 12, 20)
 insert into Conference (name, year, acronym, submissionDate)
@@ -18,4 +19,5 @@ goto cleanup
 cleanup:
 delete from Conference
 dbcc CHECKIDENT ('Conference', reseed, 0);
+set nocount off
 go

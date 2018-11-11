@@ -2,6 +2,7 @@ use SI2
 
 -- prepare test
 prepare_user_deletion:
+set nocount on
 insert into Institution (name, country, acronym, address) 
 values ('Instituto Superior de Engenharia de Lisboa', 'Portugal', 'ISEL', 'Lisbon')
 declare @institutionId int
@@ -22,4 +23,5 @@ delete from [User]
 delete from Institution
 DBCC CHECKIDENT ('Institution', RESEED, 0);
 DBCC CHECKIDENT ('User', RESEED, 0);
+set nocount off
 GO

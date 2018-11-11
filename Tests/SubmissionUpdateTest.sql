@@ -3,6 +3,7 @@ use SI2
 go
 
 prepare_submission_update:
+set nocount on
 declare @date as datetime
 select @date = datefromparts(2018, 12, 20)
 insert into Conference (name, year, acronym, submissionDate)
@@ -37,4 +38,5 @@ delete from ArticleState
 dbcc checkident ('Article', RESEED, 0);
 dbcc checkident ('File', RESEED, 0);
 dbcc checkident ('Conference', RESEED, 0);
+set nocount off
 go

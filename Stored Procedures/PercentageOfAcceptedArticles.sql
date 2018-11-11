@@ -13,6 +13,6 @@ as
 	where conferenceId = @conferenceId
 	select @numberOfAcceptedArticles = count(*)
 	from Article
-	where conferenceId = @conferenceId
+	where conferenceId = @conferenceId AND accepted = 1
 	set @percentage = (@numberOfAcceptedArticles * 100)/@numberOfArticles
 go

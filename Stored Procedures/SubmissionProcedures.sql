@@ -63,7 +63,7 @@ begin try
 				fetch next from cur into @authorId, @isResponsible, @articleId
 				while @@FETCH_STATUS = 0
 					begin
-						insert into ArticleAuthor(articleId, authorId, isResponsible) values (@articleId, @authorId, @isResponsible)
+						exec dbo.InsertArticleAuthor @articleId, @authorId, @isResponsible
 						fetch next from cur into @authorId, @isResponsible, @articleId
 					end
 				close cur

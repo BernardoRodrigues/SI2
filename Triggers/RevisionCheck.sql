@@ -14,6 +14,4 @@ if @text is null or @grade is null
         rollback transaction;
 		raiserror ('The revision text and grade must be both not null', 5, -1);	
 	end
-declare @articleId int
-select @articleId = articleId from inserted
 go
