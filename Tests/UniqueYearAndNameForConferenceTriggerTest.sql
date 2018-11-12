@@ -12,13 +12,17 @@ declare @conferenceId int
 select @conferenceId = SCOPE_IDENTITY()
 
 -- will raise error
-declare @date2 as datetime
-select @date2 = datefromparts(2018, 12, 30)
-insert into Conference (name, year, acronym, submissionDate)
-values ('Web Summit 2', 2018, 'WS2', @date)
-declare @conferenceId2 int
-select @conferenceId2 = SCOPE_IDENTITY()
-goto cleanup
+begin try
+	declare @date2 as datetime
+	select @date2 = datefromparts(2018, 12, 30)
+	insert into Conference (name, year, acronym, submissionDate)
+	values ('Web Summit', 2018, 'WS2', @date2)
+	declare @conferenceId2 int
+	select @conferenceId2 = SCOPE_IDENTITY()
+end try
+begin catch
+	goto cleanup
+end catch
 
 cleanup:
 delete from Conference

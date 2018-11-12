@@ -8,9 +8,7 @@ create procedure InsertArticleAuthor
 @isResponsible bit
 as
 begin try
-	begin transaction
-		insert into ArticleAuthor (articleId, authorId, isResponsible) values (@articleId, @authorId, @isResponsible)
-	commit transaction
+	insert into ArticleAuthor (articleId, authorId, isResponsible) values (@articleId, @authorId, @isResponsible)
 end try
 begin catch
 	declare @errorMessage nvarchar(max), 

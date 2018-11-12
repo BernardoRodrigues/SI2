@@ -1,7 +1,7 @@
 use SI2
 
-
-
+if OBJECT_ID('dbo.InsertUser') is not null
+	drop proc dbo.InsertUser
 go
 
 create procedure InsertUser
@@ -33,6 +33,10 @@ begin catch
 end catch
 go
 
+if OBJECT_ID('dbo.DeleteUser') is not null 
+	drop proc dbo.DeleteUser
+go
+
 create procedure DeleteUser
 @id int
 as
@@ -40,10 +44,12 @@ begin try
 	begin transaction
 		delete from ConferenceUser
 		where userId = @id
-		delete from ArticleReviewer
-		where reviewerId = @id
-		delete from ArticleAuthor
-		where authorId = @id
+		if exists (Select * from ArticleReviewer where reviewerId = @id)
+			delete from ArticleReviewer
+			where reviewerId = @id
+		if exists (Select * from ArticleAuthor where authorId = @id)
+			delete from ArticleAuthor
+			where authorId = @id
 		delete from [User]
 		where [User].id = @id
 	commit transaction
@@ -60,6 +66,10 @@ begin catch
 
     raiserror (@errorMessage, @errorSeverity, @errorState);
 end catch
+go
+
+if OBJECT_ID('dbo.UpdateUser') is not null
+	drop proc dbo.UpdateUser
 go
 
 create procedure UpdateUser

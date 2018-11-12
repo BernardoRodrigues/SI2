@@ -22,7 +22,6 @@ select @articleId = SCOPE_IDENTITY()
 insert into [File] (articleId, [file], insertionDate) 
 values (@articleId, convert(varbinary(max), 'Random bytes for the file column'), GETDATE())
 
-select * from [File]
 insert into Institution (name, country, acronym, address) 
 values ('Instituto Superior de Engenharia de Lisboa', 'Portugal', 'ISEL', 'Lisbon')
 declare @institutionId int
@@ -30,22 +29,31 @@ select @institutionId = SCOPE_IDENTITY()
 insert into [User] (email, name, institutionId) values ('xpto@gmail.com', 'Jon Doe', @institutionId)
 declare @userId int
 select @userId = SCOPE_IDENTITY()
-insert into ConferenceUser (conferenceId, userId, registrationDate) values (@conferenceId, @userId, getdate())
-insert into Reviewer(reviewerId) values (@userId)
+--insert into ConferenceUser (conferenceId, userId, registrationDate) values (@conferenceId, @userId, getdate())
+--insert into Reviewer(reviewerId) values (@userId)
 insert into ArticleReviewer(articleId, reviewerId, grade, revisionText) values (@articleId, @userId, null, null)
 goto revision_check_trigger_test
 
 revision_check_trigger_test:
 
 -- will raise error
-update ArticleReviewer
-set grade = 70
-where articleId = @articleId
+begin try
+	update ArticleReviewer
+	set grade = 70
+	where articleId = @articleId
+end try
+begin catch
+end catch
 
 -- will raise error
-update ArticleReviewer
-set revisionText = 'something something'
-where articleId = @articleId
+begin try
+	update ArticleReviewer
+	set revisionText = 'something something'
+	where articleId = @articleId
+end try
+begin catch
+end catch
+
 
 -- won't raise error
 update ArticleReviewer
@@ -55,7 +63,7 @@ goto cleanup
 
 cleanup:
 delete from ArticleReviewer
-delete from Reviewer
+--delete from Reviewer
 delete from ConferenceUser
 delete from [User]
 delete from [File]

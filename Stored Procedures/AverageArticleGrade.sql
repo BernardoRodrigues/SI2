@@ -6,7 +6,7 @@ go
 create proc ArticleAverageGrade 
 @id int 
 as
-if (@id is not null)
+if @id is not null
 	select AVG(ArticleReviewer.grade) as gradeAverage, Article.id as id
 	from Article
 		inner join ArticleReviewer on (Article.id = ArticleReviewer.articleId)

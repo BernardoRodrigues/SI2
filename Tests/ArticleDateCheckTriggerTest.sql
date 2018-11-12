@@ -20,11 +20,16 @@ goto article_date_check_trigger_test
 article_date_check_trigger_test:
 
 -- will raise error
-insert into Article (conferenceId, stateId, summary, submissionDate) 
-values (@conferenceId, 1, 'Some random article', getdate())
-goto cleanup
+begin try
+	insert into Article (conferenceId, stateId, summary, submissionDate) 
+	values (@conferenceId, 1, 'Some random article', getdate())
+end try
+begin catch
+	goto cleanup
+end catch
 
 cleanup:
+delete from ArticleState
 delete from Conference
 dbcc checkident ('Conference', reseed, 0)
 set nocount off

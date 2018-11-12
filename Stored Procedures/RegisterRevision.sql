@@ -1,5 +1,6 @@
 use SI2
-
+if OBJECT_ID('dbo.RegisterRevision') is not null
+	drop proc dbo.RegisterRevision
 go
 
 create procedure RegisterRevision

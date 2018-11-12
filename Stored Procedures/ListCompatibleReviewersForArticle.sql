@@ -1,5 +1,6 @@
 use SI2
-
+if OBJECT_ID('dbo.GetCompatibleReviewersForArticle') is not null
+	drop proc dbo.GetCompatibleReviewersForArticle
 go
 
 create procedure GetCompatibleReviewersForArticle
@@ -7,6 +8,14 @@ create procedure GetCompatibleReviewersForArticle
 as
 begin try
 	begin transaction
+	--select * from [User] U  
+	--where not exists (
+	--		Select * from ArticleAuthor AU where Au.articleId = @articleId and Au.authorId = U.id
+	--		)
+	--	--and not exists (
+	--	--	Select * from Institution I where I.id = U.institutionId
+	--	--)
+		
 		select CompatibleReviewers.id, CompatibleReviewers.userName, CompatibleReviewers.email, CompatibleReviewers.institutionId, CompatibleReviewers.institutionName, CompatibleReviewers.institutionCountry, CompatibleReviewers.institutionAcronym 
 			from Article
 				inner join Conference on (Article.conferenceId = Conference.id)
@@ -17,16 +26,16 @@ begin try
 								inner join Institution on ([User].institutionId = Institution.id)
 								inner join (
 									select [User].id,  [User].institutionId, Institution.name
-									from Reviewer
-										inner join [User] on ([User].id = Reviewer.reviewerId)
+									from vw_Reviewer
+										inner join [User] on ([User].id = vw_Reviewer.id)
 										inner join Institution on ([User].institutionId = Institution.id)
 								) as Reviewers on (Reviewers.id = [User].id)
 								inner join (
 									select [User].id,  [User].institutionId, Institution.name
-									from Author
-										inner join [User] on (Author.authorId = [User].id)
+									from vw_Author
+										inner join [User] on (vw_Author.id = [User].id)
 										inner join Institution on ([User].institutionId = Institution.id)
-										inner join ArticleAuthor on (ArticleAuthor.authorId = Author.authorId)
+										inner join ArticleAuthor on (ArticleAuthor.authorId = vw_Author.id)
 									where ArticleAuthor.articleId = 1 
 								) as Authors on (Authors.institutionId != Reviewers.institutionId)
 				) as CompatibleReviewers on (CompatibleReviewers.id = ConferenceUser.userId)

@@ -1,16 +1,14 @@
 use SI2
-
+if OBJECT_ID ('dbo.InsertFile') is not null
+	drop proc dbo.InsertFile
 go
 
 create procedure InsertFile
 @articleId int,
 @file varbinary(MAX)
 as
--- tran needed ?
 begin try
-	begin transaction
-		insert into [File] (articleId, [file], insertionDate) values (@articleId, @file, GETDATE())
-	commit transaction
+	insert into [File] (articleId, [file], insertionDate) values (@articleId, @file, GETDATE())
 end try
 begin catch
 	declare @errorMessage nvarchar(max), 
@@ -26,11 +24,19 @@ begin catch
 end catch
 go
 
+if OBJECT_ID('dbo.authors') is not null
+	drop type dbo.authors
+go
+
 create type	authors as table (
 	authorId int primary key not null,
 	isResponsible bit not null,
 	articleId int
 )
+go
+
+if OBJECT_ID ('dbo.InsertSubmission') is not null
+	drop proc dbo.InsertSubmission
 go
 
 create procedure InsertSubmission
@@ -90,6 +96,11 @@ begin catch
 end catch
 go
 
+if OBJECT_ID('dbo.DeleteSubmission') is not null
+	drop proc dbo.DeleteSubmission
+go
+
+
 create procedure DeleteSubmission
 @articleId int
 as
@@ -117,6 +128,10 @@ begin catch
 
     raiserror (@errorMessage, @errorSeverity, @errorState);	
 end catch
+go
+
+if OBJECT_ID('dbo.UpdateSubmission') is not null 
+	drop proc dbo.UpdateSubmission
 go
 
 create procedure UpdateSubmission
