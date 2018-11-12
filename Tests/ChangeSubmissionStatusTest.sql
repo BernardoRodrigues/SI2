@@ -46,8 +46,8 @@ insert into [User] (email, name, institutionId) values ('xpto2@gmail.com', 'Jon 
 declare @userId2 int
 select @userId2 = SCOPE_IDENTITY()
 insert into ConferenceUser (conferenceId, userId, registrationDate) values (@conferenceId, @userId2, getdate())
---insert into dbo.Reviewer(reviewerId) values (@userId)
---insert into dbo.Reviewer(reviewerId) values (@userId2)
+insert into dbo.Reviewer(reviewerId) values (@userId)
+insert into dbo.Reviewer(reviewerId) values (@userId2)
 insert into dbo.ArticleReviewer (articleId, reviewerId, revisionText, grade)
 values (@articleId, @userId, null, null)
 insert into dbo.ArticleReviewer (articleId, reviewerId, revisionText, grade)
@@ -78,7 +78,7 @@ goto cleanup
 
 cleanup:
 delete from ArticleReviewer
---delete from Reviewer
+delete from Reviewer
 delete from ConferenceUser
 delete from [User]
 delete from [File]

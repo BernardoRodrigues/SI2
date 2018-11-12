@@ -1,7 +1,5 @@
 use SI2
 
-if OBJECT_ID ('dbo.UpdateConference') is not null
-	drop proc dbo.UpdateConference
 go
 
 create procedure UpdateConference
@@ -12,15 +10,14 @@ create procedure UpdateConference
 @grade int,
 @submissionDate datetime
 as
--- tran needed ?
 begin try
 	begin transaction
 		update Conference
-		set acronym = @acronym, 
+		set acronym = isnull(@acronym, acronym), 
 		grade = isnull(@grade, grade), 
-		submissionDate = @submissionDate,
-		name = @name,
-		[year] = @year
+		submissionDate = isnull(@submissionDate, submissionDate),
+		name = isnull(@name, name),
+		[year] = isnull(@year, [year])
 		where id = @conferenceId
 	commit transaction
 end try

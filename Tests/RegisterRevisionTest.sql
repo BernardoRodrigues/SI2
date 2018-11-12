@@ -30,7 +30,7 @@ insert into [User] (email, name, institutionId) values ('xpto@gmail.com', 'Jon D
 declare @userId int
 select @userId = SCOPE_IDENTITY()
 insert into ConferenceUser (conferenceId, userId, registrationDate) values (@conferenceId, @userId, getdate())
---insert into dbo.Reviewer(reviewerId) values (@userId)
+insert into dbo.Reviewer(reviewerId) values (@userId)
 insert into dbo.ArticleReviewer (articleId, reviewerId, revisionText, grade)
 values (@articleId, @userId, null, null)
 goto insertion_test
@@ -43,7 +43,7 @@ goto cleanup
 cleanup:
 delete from ConferenceUser
 delete from ArticleReviewer
---delete from Reviewer
+delete from Reviewer
 delete from [User]
 delete from [File]
 delete from Article

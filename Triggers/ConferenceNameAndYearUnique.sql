@@ -1,4 +1,5 @@
 use SI2
+go
 
 if OBJECT_ID('trg_ConferenceNameYear') is not null
 	drop trigger trg_ConferenceNameYear
@@ -17,6 +18,6 @@ select @count = count(*) from Conference where Conference.name = @name and Confe
 if @count > 1
 	begin
         rollback transaction;
-		raiserror ('The combination of year and name must be unique', 5, -1);	
+		raiserror ('The combination of year and name must be unique', 10, -1);	
 	end
 go

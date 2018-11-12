@@ -1,4 +1,5 @@
 use  SI2
+
 go
 
 prepare_list_compatible_reviewers_for_article_test:
@@ -38,44 +39,44 @@ insert into [User] (email, name, institutionId) values ('xpto@gmail.com', 'Jon D
 declare @userId int
 select @userId = SCOPE_IDENTITY()
 insert into ConferenceUser (conferenceId, userId, registrationDate) values (@conferenceId, @userId, getdate())
---insert into dbo.Reviewer(reviewerId) values (@userId)
+insert into dbo.Reviewer(reviewerId) values (@userId)
 
 -- compatible Reviewer
 insert into [User] (email, name, institutionId) values ('xpto2@gmail.com', 'Jon Doe 2', @institutionId2)
 declare @userId2 int
 select @userId2 = SCOPE_IDENTITY()
 insert into ConferenceUser (conferenceId, userId, registrationDate) values (@conferenceId, @userId2, getdate())
---insert into dbo.Reviewer(reviewerId) values (@userId2)
+insert into dbo.Reviewer(reviewerId) values (@userId2)
 
 -- not compatible Reviewer
 insert into [User] (email, name, institutionId) values ('xpto3@gmail.com', 'Jon Doe 3', @institutionId)
 declare @userId3 int
 select @userId3 = SCOPE_IDENTITY()
 insert into ConferenceUser (conferenceId, userId, registrationDate) values (@conferenceId, @userId3, getdate())
---insert into Reviewer (reviewerId) values (@userId3)
---insert into Author (authorId) values (@userId3)
+insert into Reviewer (reviewerId) values (@userId3)
+insert into Author (authorId) values (@userId3)
 
 -- author, not reviewer
 insert into [User] (email, name, institutionId) values ('xpto4@gmail.com', 'Jon Doe 4', @institutionId)
 declare @userId4 int
 select @userId4 = SCOPE_IDENTITY()
 insert into ConferenceUser (conferenceId, userId, registrationDate) values (@conferenceId, @userId4, getdate())
---insert into Author (authorId) values (@userId4)
+insert into Author (authorId) values (@userId4)
 
 -- compatible Reviewer
 insert into [User] (email, name, institutionId) values ('xpto5@gmail.com', 'Jon Doe 5', @institutionId2)
 declare @userId5 int
 select @userId5 = SCOPE_IDENTITY()
 insert into ConferenceUser (conferenceId, userId, registrationDate) values (@conferenceId, @userId5, getdate())
---insert into Reviewer (reviewerId) values (@userId5)
---insert into Author (authorId) values (@userId5)
+insert into Reviewer (reviewerId) values (@userId5)
+insert into Author (authorId) values (@userId5)
 
 -- compatible Reviewer
 insert into [User] (email, name, institutionId) values ('xpto6@gmail.com', 'Jon Doe 6', @institutionId3)
 declare @userId6 int
 select @userId6 = SCOPE_IDENTITY()
 insert into ConferenceUser (conferenceId, userId, registrationDate) values (@conferenceId, @userId6, getdate())
---insert into Reviewer (reviewerId) values (@userId6)
+insert into Reviewer (reviewerId) values (@userId6)
 
 
 -- first Article
@@ -109,8 +110,8 @@ cleanup:
 delete from ArticleAuthor
 delete from ArticleReviewer
 delete from ConferenceUser
---delete from Reviewer
---delete from Author
+delete from Reviewer
+delete from Author
 delete from [User]
 delete from Institution
 delete from [File]

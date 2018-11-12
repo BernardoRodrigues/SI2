@@ -1,6 +1,5 @@
 use SI2
-if OBJECT_ID('dbo.GetCompatibleReviewersForArticle') is not null
-	drop proc dbo.GetCompatibleReviewersForArticle
+
 go
 
 create procedure GetCompatibleReviewersForArticle
@@ -18,16 +17,16 @@ begin try
 								inner join Institution on ([User].institutionId = Institution.id)
 								inner join (
 									select [User].id,  [User].institutionId, Institution.name
-									from vw_Reviewer
-										inner join [User] on ([User].id = vw_Reviewer.id)
+									from Reviewer
+										inner join [User] on ([User].id = Reviewer.reviewerId)
 										inner join Institution on ([User].institutionId = Institution.id)
 								) as Reviewers on (Reviewers.id = [User].id)
 								inner join (
 									select [User].id,  [User].institutionId, Institution.name
-									from vw_Author
-										inner join [User] on (vw_Author.id = [User].id)
+									from Author
+										inner join [User] on (Author.authorId = [User].id)
 										inner join Institution on ([User].institutionId = Institution.id)
-										inner join ArticleAuthor on (ArticleAuthor.authorId = vw_Author.id)
+										inner join ArticleAuthor on (ArticleAuthor.authorId = Author.authorId)
 									where ArticleAuthor.articleId = 1 
 								) as Authors on (Authors.institutionId != Reviewers.institutionId)
 				) as CompatibleReviewers on (CompatibleReviewers.id = ConferenceUser.userId)

@@ -12,8 +12,7 @@ select * from Conference
 goto update_test
 
 update_test:
-select @date = datefromparts(2019, 12, 20)
-exec UpdateConference @conferenceId, 'Web Summit Lisbon', 2019, 'WSL', null,@date 
+exec UpdateConference @conferenceId, 'Web Summit Lisbon', null, 'WSL', null, null
 select * from Conference
 goto cleanup
 

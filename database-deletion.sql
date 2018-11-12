@@ -35,4 +35,3 @@ if OBJECT_ID('dbo.Institution') is not null
 	drop table dbo.Institution
 
 go
-use master

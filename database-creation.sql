@@ -16,8 +16,7 @@ create table dbo.Conference (
 	[year] int check (year > 0) not null,
 	acronym nvarchar(128) not null,
 	grade int check (grade >= 0 AND grade <= 100),
-	submissionDate date not null,
-	-- revisionDate? -- perguntar ao engenheiro
+	submissionDate date not null
 )
 
 create table dbo.ArticleState (
@@ -50,7 +49,7 @@ create table dbo.[File] (
 
 create table dbo.Institution (
 	id int identity(1,1) primary key,
-	name nvarchar(256) unique not null, --primary key
+	name nvarchar(256) unique not null,
 	address nvarchar(256) not null,
 	country nvarchar(128) not null,
 	acronym nvarchar(128) not null
@@ -65,24 +64,23 @@ create table dbo.[User] (
 
 )
 
---create table dbo.Author (
+create table dbo.Author (
 
---	authorId int primary key references [User](id)
+	authorId int primary key references [User](id)
 
---)
+)
 
---create table dbo.Reviewer (
+create table dbo.Reviewer (
 
---	reviewerId int primary key references [User](id)
+	reviewerId int primary key references [User](id)
 
---)
+)
 
 create table dbo.ConferenceUser (
 	conferenceId int,
 	userId int references [User](id),
 	registrationDate datetime not null,
 	primary key(conferenceId, userId),
-	--president bit ??
 	constraint fk_User_Conference foreign key (conferenceId) references Conference(id)
 
 )
@@ -107,27 +105,7 @@ create table dbo.ArticleReviewer (
 	
 )
 
-if OBJECT_ID('dbo.vw_Reviewer') is not null
-	drop view dbo.vw_Reviewer
-
-go
-
-
-create view dbo.vw_Reviewer
-as 
-	Select [User].id as id, [User].name as name, [User].email as email, [User].institutionId as institutionId 
-	from [User] 
-		inner join dbo.ArticleReviewer on ([User].id = ArticleReviewer.reviewerId)
-go 
-
-if OBJECT_ID('dbo.vw_Author') is not null
-	drop view dbo.vw_Author
-go
-
-
-create view dbo.vw_Author
-as 
-	select [User].id as id, [User].name as name, [User].email as email, [User].institutionId as institutionId
-	from [User]
-		inner join dbo.ArticleAuthor on ([User].id = ArticleAuthor.authorId)
-go 
+insert into ArticleState (id, state) values (1, 'Submitted')
+insert into ArticleState (id, state) values (1, 'Under Review')
+insert into ArticleState (id, state) values (1, 'Accepted')
+insert into ArticleState (id, state) values (1, 'Rejected')

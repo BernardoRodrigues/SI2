@@ -1,6 +1,5 @@
 use SI2
-if OBJECT_ID('dbo.GetPercentageOfAcceptedArticles') is not null
-	drop proc dbo.GetPercentageOfAcceptedArticles
+
 go
 
 create procedure GetPercentageOfAcceptedArticles

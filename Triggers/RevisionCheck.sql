@@ -1,6 +1,5 @@
 use SI2
-if OBJECT_ID ('trg_RevisionCheck') is not null
-	drop trigger trg_RevisionCheck
+
 go
 
 create trigger trg_RevisionCheck 

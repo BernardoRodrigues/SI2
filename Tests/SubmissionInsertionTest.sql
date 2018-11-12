@@ -46,7 +46,6 @@ delete from [User]
 delete from Article
 delete from Conference
 delete from ArticleState
-delete from Institution
 dbcc checkident ('Article', RESEED, 0);
 dbcc checkident ('File', RESEED, 0);
 dbcc checkident ('Conference', RESEED, 0);
