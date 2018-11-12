@@ -4,11 +4,11 @@ go
 
 create procedure AttributeReviewerToRevision
 @articleId int,
-@reviewerEmail nvarchar(256)
+@reviewerId nvarchar(256)
 as
 begin try
 	begin transaction
-		insert into ArticleReviewer(articleId, reviewerEmail) values (@articleId, @reviewerEmail)
+		insert into ArticleReviewer(articleId, reviewerId) values (@articleId, @reviewerId)
 		update Article
 		set stateId  = 2
 		where id = @articleId

@@ -35,7 +35,7 @@ create table dbo.Article (
 
 	id int identity(1, 1) primary key,
 	conferenceId int, 
-	stateId int references ArticleState(id),
+	stateId int references ArticleState(id) not null,
 	summary nvarchar(1024) not null,
 	accepted bit,
 	submissionDate datetime not null,
@@ -58,29 +58,29 @@ create table dbo.Institution (
 	name nvarchar(256) unique, --primary key
 	address nvarchar(256) not null,
 	country nvarchar(128) not null,
-	acronym nvarchar(128)
+	acronym nvarchar(128) not null
 
 )
 
 create table dbo.[User] (
 	id int identity(1,1) primary key,
-	email nvarchar(256) unique, --primary key,
+	email nvarchar(256) unique not null,
 	institutionId int references Institution(id),
 	name nvarchar(256) not null
 
 )
 
---create table dbo.Author (
+create table dbo.Author (
 
---	authorEmail nvarchar(256) primary key references [User](email)
+	authorId int primary key references [User](id)
 
---)
+)
 
---create table dbo.Reviewer (
+create table dbo.Reviewer (
 
---	reviewerEmail nvarchar(256) primary key references [User](email)
+	reviewerId int primary key references [User](id)
 
---)
+)
 
 create table dbo.ConferenceUser (
 	conferenceId int,
@@ -95,7 +95,7 @@ create table dbo.ConferenceUser (
 create table dbo.ArticleAuthor (
 
 	articleId int references Article(id),
-	authorId int references [User](id),
+	authorId int references Author(authorId),
 	isResponsible bit not null,
 	primary key(articleId, authorId)
 	
@@ -105,7 +105,7 @@ create table dbo.ArticleAuthor (
 create table dbo.ArticleReviewer (
 
 	articleId int references Article(id),
-	reviewerId int references [User](id),
+	reviewerId int references Reviewer(reviewerId),
 	revisionText nvarchar(1024),
 	grade int check (grade >= 0 AND grade <= 100),
 	primary key (articleId, reviewerId)

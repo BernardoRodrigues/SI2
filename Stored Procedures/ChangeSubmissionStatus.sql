@@ -3,42 +3,43 @@ use SI2
 go
 
 create procedure ChangeArticleStatus
-@conferenceName nvarchar(128),
-@conferenceYear int,
+@conferenceId int,
 @grade int
 as
 begin try
 	begin transaction
 		declare @articleGrade int
-				declare @articleId int
-				declare cur cursor local forward_only for
-				select Article.id, ArticleReviewer.grade
-				from Article 
-					inner join ArticleReviewer on (Article.id = ArticleReviewer.articleId)
-				where Article.conferenceName = @conferenceName AND Article.conferenceYear = @conferenceYear
-				open cur
+		declare @articleId int
+		declare cur cursor local forward_only for
+		select Article.id, avg(ArticleReviewer.grade) as grade
+		from Article 
+			inner join ArticleReviewer on (Article.id = ArticleReviewer.articleId)
+		where Article.conferenceId = @conferenceId
+		group by Article.id
+		open cur
+		fetch next from cur into @articleId, @articleGrade
+		while @@FETCH_STATUS = 0
+			begin
+				print N'Grade Average: ' + cast(@articleGrade as nvarchar(6))
+				update Article
+				set accepted = 
+					case
+						when @grade <= @articleGrade
+							then 1
+						else
+							0
+						end
+					,
+					stateId = 
+						case
+							when @grade <= @articleGrade
+							then 3
+						else
+							4
+						end
+				where id = @articleId
 				fetch next from cur into @articleId, @articleGrade
-				while @@FETCH_STATUS = 0
-					begin
-						update Article
-						set accepted = 
-							case
-								when @grade <= @articleGrade
-									then 1
-								else
-									0
-								end
-							,
-							stateId = 
-								case
-									when @grade <= @articleGrade
-									then 3
-								else
-									4
-								end
-						where id = @articleId
-						fetch next from cur into @articleId, @articleGrade
-					end
+			end
 	commit transaction
 end try
 begin catch
@@ -56,15 +57,14 @@ end catch
 go
 
 create procedure ChangeSubmissionStatus
-@conferenceName nvarchar(128),
-@conferenceYear int,
+@conferenceId int,
 @grade int
 as
 begin try
 	begin transaction
 		if @grade is null
-			select @grade = grade from Conference where [name] = @conferenceName AND [year] = @conferenceYear
-		exec ChangeArticleStatus @conferenceName, @conferenceYear, @grade
+			select @grade = grade from Conference where Conference.id = @conferenceId
+		exec ChangeArticleStatus @conferenceId, @grade
 	commit transaction
 end try
 begin catch
