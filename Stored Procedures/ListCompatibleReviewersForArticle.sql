@@ -8,14 +8,6 @@ create procedure GetCompatibleReviewersForArticle
 as
 begin try
 	begin transaction
-	--select * from [User] U  
-	--where not exists (
-	--		Select * from ArticleAuthor AU where Au.articleId = @articleId and Au.authorId = U.id
-	--		)
-	--	--and not exists (
-	--	--	Select * from Institution I where I.id = U.institutionId
-	--	--)
-		
 		select CompatibleReviewers.id, CompatibleReviewers.userName, CompatibleReviewers.email, CompatibleReviewers.institutionId, CompatibleReviewers.institutionName, CompatibleReviewers.institutionCountry, CompatibleReviewers.institutionAcronym 
 			from Article
 				inner join Conference on (Article.conferenceId = Conference.id)
