@@ -13,24 +13,43 @@ begin try
 				inner join ConferenceUser on (ConferenceUser.conferenceId = Conference.id)
 				inner join (
 					select distinct ([User].id) as id, [User].name as userName, [User].email as email, Institution.id as institutionId, Institution.name as institutionName, Institution.country as institutionCountry, Institution.acronym as institutionAcronym
-							from [User]
+					from [User]
+					inner join Institution on ([User].institutionId = Institution.id)
+					where exists (
+						select institutionId
+						from Reviewer
+						inner join [User] on ([User].id = Reviewer.reviewerId)
+						inner join Institution on (Institution.id = [User].institutionId)
+					) except (
+						select institutionId
+							from Author
+								inner join [User] on (Author.authorId = [User].id)
 								inner join Institution on ([User].institutionId = Institution.id)
-								inner join (
-									select [User].id,  [User].institutionId, Institution.name
-									from Reviewer
-										inner join [User] on ([User].id = Reviewer.reviewerId)
-										inner join Institution on ([User].institutionId = Institution.id)
-								) as Reviewers on (Reviewers.id = [User].id)
-								inner join (
-									select [User].id,  [User].institutionId, Institution.name
-									from Author
-										inner join [User] on (Author.authorId = [User].id)
-										inner join Institution on ([User].institutionId = Institution.id)
-										inner join ArticleAuthor on (ArticleAuthor.authorId = Author.authorId)
-									where ArticleAuthor.articleId = 1 
-								) as Authors on (Authors.institutionId != Reviewers.institutionId)
-				) as CompatibleReviewers on (CompatibleReviewers.id = ConferenceUser.userId)
-			where Article.id = @articleId
+								inner join ArticleAuthor on (ArticleAuthor.authorId = Author.authorId)
+							where ArticleAuthor.articleId = @articleId
+					)
+				) as CompatibleReviewers on CompatibleReviewers.id = ConferenceUser.userId
+				where Article.id = @articleId
+				--	select distinct ([User].id) as id, [User].name as userName, [User].email as email, Institution.id as institutionId, Institution.name as institutionName, Institution.country as institutionCountry, Institution.acronym as institutionAcronym
+				--			from [User]
+				--				inner join Institution on ([User].institutionId = Institution.id)
+				--				inner join (
+				--					select [User].id,  [User].institutionId, Institution.name
+				--					from Reviewer
+				--						inner join [User] on ([User].id = Reviewer.reviewerId)
+				--						inner join Institution on ([User].institutionId = Institution.id)
+				--				) as Reviewers on (Reviewers.id = [User].id)
+				--				inner join (
+				--					select [User].id,  [User].institutionId, Institution.name
+				--					from Author
+				--						inner join [User] on (Author.authorId = [User].id)
+				--						inner join Institution on ([User].institutionId = Institution.id)
+				--						inner join ArticleAuthor on (ArticleAuthor.authorId = Author.authorId)
+				--					where ArticleAuthor.articleId = @articleId
+				--				) as Authors on (Authors.institutionId != Reviewers.institutionId)
+				--) as CompatibleReviewers on (CompatibleReviewers.id = ConferenceUser.userId)
+			
+		
 	commit transaction
 end try
 begin catch

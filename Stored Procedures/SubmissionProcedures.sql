@@ -4,11 +4,13 @@ go
 
 create procedure InsertFile
 @articleId int,
-@file varbinary(MAX)
+@file varbinary(MAX),
+@id int out
 as
 begin try
 	begin transaction
 		insert into [File] (articleId, [file], insertionDate) values (@articleId, @file, GETDATE())
+		select @id = scope_identity()
 	commit transaction
 end try
 begin catch

@@ -105,7 +105,7 @@ create table dbo.ArticleReviewer (
 	
 )
 
-insert into ArticleState (id, state) values (1, 'Submitted')
-insert into ArticleState (id, state) values (1, 'Under Review')
-insert into ArticleState (id, state) values (1, 'Accepted')
-insert into ArticleState (id, state) values (1, 'Rejected')
+insert into ArticleState (id, state) values (1,	 'Submitted')
+insert into ArticleState (id, state) values (2, 'Under Review')
+insert into ArticleState (id, state) values (3, 'Accepted')
+insert into ArticleState (id, state) values (4, 'Rejected')

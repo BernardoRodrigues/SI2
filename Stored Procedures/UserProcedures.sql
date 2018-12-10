@@ -8,15 +8,20 @@ create procedure InsertUser
 @email nvarchar(256),
 @institutionId nvarchar(256),
 @name nvarchar(256),
-@conferenceId int
+@conferenceId int,
+@id int out
 as
 
 begin try
 	begin transaction
-		declare @id as int
-		insert into [User] (email, institutionId, name) values (@email, @institutionId, @name)
-		select @id = SCOPE_IDENTITY()
-		insert into ConferenceUser (conferenceId, userId, registrationDate) values (@conferenceId, @id, GETDATE())
+		if not exists (select * from [User] where email = @email)
+		begin
+			insert into [User] (email, institutionId, name) values (@email, @institutionId, @name)
+			select @id = SCOPE_IDENTITY()
+		end
+		else
+			select @id = id from [User] where email = @email
+			insert into ConferenceUser (conferenceId, userId, registrationDate) values (@conferenceId, @id, GETDATE())
 	commit transaction
 end try
 begin catch
@@ -72,8 +77,8 @@ begin try
 	begin transaction
 		update [User]
 		set 
-		name = isnull(@name, name), 
-		institutionId = isnull(@institutionId, institutionId), 
+			name = isnull(@name, name), 
+			institutionId = isnull(@institutionId, institutionId), 
 		email = isnull(@email, email)
 		where id = @id
 	commit transaction
