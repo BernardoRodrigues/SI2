@@ -1,5 +1,6 @@
 ﻿namespace SI2App.Mapper
 {
+    using SI2App.Concrete;
     using SI2App.Dal;
     using System;
     using System.Collections.Generic;
@@ -158,6 +159,21 @@
 
                 cmd.CommandText = commandText;
                 return cmd.ExecuteReader(CommandBehavior.Default);
+            }
+        }
+
+        public virtual TCol ReadWhere(Clauses clauses)
+        {
+            this.EnsureContext();
+            using (IDbCommand cmd = this.context.CreateCommand())
+            {
+                cmd.CommandText = $"{this.SelectAllCommandText} {clauses.GetWhereClause()}";
+                cmd.CommandType = this.SelectAllCommandType;
+                this.SelectAllParameters(cmd);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    return this.MapAll(reader);
+                }
             }
         }
     }

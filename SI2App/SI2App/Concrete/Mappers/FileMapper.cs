@@ -33,8 +33,12 @@
         {
             var articleId = new SqlParameter("@articleId", entity.ArticleId);
             var file = new SqlParameter("@file", entity.SubmittedFile);
+            var id = new SqlParameter("@id", SqlDbType.Int)
+            {
+                Direction = ParameterDirection.Output
+            };
 
-            command.Parameters.AddRange(new List<SqlParameter> { articleId, file });
+            command.Parameters.AddRange(new List<SqlParameter> { articleId, file, id });
         }
         protected override File Map(IDataRecord record) => throw new NotImplementedException();
         protected override void SelectParameters(IDbCommand command, Tuple<int, int?> id) => throw new NotImplementedException();

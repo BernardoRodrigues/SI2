@@ -18,11 +18,11 @@
 
         public DateTime? SubmissionDate { get; set; }
 
-        public List<int> AttendeesIds { get; set; }
+        public virtual List<Attendee> Attendees { get; set; }
 
         public Conference()
         {
-            this.AttendeesIds = new List<int>();
+            this.Attendees = new List<Attendee>();
         }
 
     }

@@ -11,6 +11,23 @@
     public class ConferenceMapper : AbstractMapper<Conference, int?, List<Conference>>, IConferenceMapper
     {
 
+        internal List<Attendee> LoadAttendees(Conference conference)
+        {
+            var attendees = new List<Attendee>();
+            var mapper = new AttendeeMapper(this.context);
+
+            var parameters = new List<IDataParameter>
+            {
+                new SqlParameter("@id", conference.Id)
+            };
+
+            using (var reader = this.ExecuteReader("select userId from ConferenceUser where conferenceId = @id", parameters))
+            {
+                while (reader.Read()) attendees.Add(mapper.Read(reader.GetInt32(0)));
+            }
+            return attendees;
+        }
+
         public ConferenceMapper(IContext context) : base(context)
         {
         }

@@ -47,14 +47,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Concrete\ArticleMapper.cs" />
-    <Compile Include="Concrete\AuthorMapper.cs" />
-    <Compile Include="Concrete\ConferenceMapper.cs" />
-    <Compile Include="Concrete\ConferenceRepository.cs" />
+    <Compile Include="Clauses.cs" />
+    <Compile Include="Concrete\Mappers\ArticleMapper.cs" />
+    <Compile Include="Concrete\Mappers\AuthorMapper.cs" />
+    <Compile Include="Concrete\Mappers\ConferenceMapper.cs" />
+    <Compile Include="Concrete\Repositories\AttendeeRepository.cs" />
+    <Compile Include="Concrete\Repositories\AuthorRepository.cs" />
+    <Compile Include="Concrete\Repositories\ConferenceRepository.cs" />
     <Compile Include="Concrete\Context.cs" />
-    <Compile Include="Concrete\AttendeeMapper.cs" />
-    <Compile Include="Concrete\IntitutionMapper.cs" />
-    <Compile Include="Concrete\ReviewerMapper.cs" />
+    <Compile Include="Concrete\Mappers\AttendeeMapper.cs" />
+    <Compile Include="Concrete\Mappers\FileMapper.cs" />
+    <Compile Include="Concrete\Mappers\IntitutionMapper.cs" />
+    <Compile Include="Concrete\Mappers\ReviewerMapper.cs" />
+    <Compile Include="Concrete\Repositories\ArticleRepository.cs" />
+    <Compile Include="Concrete\Repositories\FileRepository.cs" />
+    <Compile Include="Concrete\Repositories\InstitutionRepository.cs" />
+    <Compile Include="Concrete\Repositories\ReviewerRepository.cs" />
     <Compile Include="Dal\IArticleRepository.cs" />
     <Compile Include="Dal\IAuthorRepository.cs" />
     <Compile Include="Dal\IConferenceRepository.cs" />
@@ -71,6 +79,8 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Mapper\AbstractMapper.cs" />
+    <Compile Include="Mapper\ArticleProxy.cs" />
+    <Compile Include="Mapper\ConferenceProxy.cs" />
     <Compile Include="Mapper\IArticleMapper.cs" />
     <Compile Include="Mapper\IAuthorMapper.cs" />
     <Compile Include="Mapper\IConferenceMapper.cs" />
@@ -80,9 +90,11 @@
     <Compile Include="Mapper\IReviewerMapper.cs" />
     <Compile Include="Mapper\IUserMapper.cs" />
     <Compile Include="Mapper\AttendeeProxy.cs" />
+    <Compile Include="Mapper\ReviewerProxy.cs" />
     <Compile Include="Model\Article.cs" />
     <Compile Include="Model\ArticleState.cs" />
     <Compile Include="Model\Author.cs" />
+    <Compile Include="Mapper\AuthorProxy.cs" />
     <Compile Include="Model\Conference.cs" />
     <Compile Include="Model\File.cs" />
     <Compile Include="Model\Institution.cs" />

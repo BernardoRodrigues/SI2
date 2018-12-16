@@ -14,6 +14,23 @@
         {
         }
 
+        internal List<Conference> LoadConferences(Attendee attendee)
+        {
+            var conferences = new List<Conference>();
+            var mapper = new ConferenceMapper(this.context);
+            var parameters = new List<IDataParameter>
+            {
+                new SqlParameter("@id", attendee.Id)
+            };
+
+            using (var reader = this.ExecuteReader("select userId from ConferenceUser where userId = @id", parameters))
+            {
+                while (reader.Read()) conferences.Add(mapper.Read(reader.GetInt32(0)));
+            }
+
+            return conferences;
+        }
+
         protected override string Table => "User";
 
         protected override string SelectAllCommandText => $"select id, name, email, institutionId from {this.Table}";
@@ -40,7 +57,7 @@
             var email = new SqlParameter("@email", entity.Email);
             var institutionId = new SqlParameter("@institutionId", entity.InstitutionId);
             var name = new SqlParameter("@name", entity.Name);
-            var conferenceId = new SqlParameter("@conferenceId", entity.ConferencesIds[0]);
+            var conferenceId = new SqlParameter("@conferenceId", entity.Conferences[0]);
             var id = new SqlParameter("@id", DbType.Int32)
             {
                 Direction = ParameterDirection.InputOutput

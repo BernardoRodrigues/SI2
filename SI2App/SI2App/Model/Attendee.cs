@@ -12,11 +12,11 @@
 
         public int InstitutionId { get; set; }
 
-        public List<int> ConferencesIds { get; set; }
+        public virtual List<Conference> Conferences { get; set; }
 
         public Attendee()
         {
-            this.ConferencesIds = new List<int>();
+            this.Conferences = new List<Conference>();
         }
     }
 }

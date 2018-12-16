@@ -9,6 +9,24 @@
 
     public class AuthorMapper : AbstractMapper<Author, int?, List<Author>>, IAuthorMapper
     {
+
+        internal List<Article> LoadArticles(Author author)
+        {
+            var articles = new List<Article>();
+            var mapper = new ArticleMapper(this.context);
+
+            var parameters = new List<IDataParameter>
+            {
+                new SqlParameter("@id", author.Id)
+            };
+
+            using (var reader = this.ExecuteReader("select articleId from ArticleAuthor where authorId = @id", parameters))
+            {
+                while (reader.Read()) articles.Add(mapper.Read(reader.GetInt32(0)));
+            }
+            return articles;
+        }
+
         public AuthorMapper(IContext context) : base(context)
         {
         }

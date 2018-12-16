@@ -9,6 +9,24 @@
 
     public class ReviewerMapper : AbstractMapper<Reviewer, int?, List<Reviewer>>, IReviewerMapper
     {
+        internal List<Article> LoadArticles(Reviewer reviewer)
+        {
+            var articles = new List<Article>();
+            var mapper = new ArticleMapper(this.context);
+
+            var parameters = new List<IDataParameter>
+            {
+                new SqlParameter("@id", reviewer.Id)
+            };
+
+            using (var reader = this.ExecuteReader("select articleId from ArticleReviewer where reviewerId = @id", parameters))
+            {
+                while (reader.Read()) articles.Add(mapper.Read(reader.GetInt32(0)));
+            }
+            return articles;
+        }
+
+
         public ReviewerMapper(IContext context) : base(context)
         {
         }
@@ -31,14 +49,15 @@
 
         protected override void InsertParameters(IDbCommand command, Reviewer entity) => this.SelectParameters(command, entity.Id);
 
-        protected override Reviewer Map(IDataRecord record) => 
-            new Reviewer
-            {
-                Id = record.GetInt32(0),
-                Name = record.GetString(1),
-                Email = record.GetString(2),
-                InstitutionId = record.GetInt32(3)
-            };
+        protected override Reviewer Map(IDataRecord record) =>
+            new ReviewerProxy
+            (
+                record.GetInt32(0),
+                record.GetString(2),
+                record.GetString(1),
+                record.GetInt32(3),
+                this.context
+            );
 
         protected override void SelectParameters(IDbCommand command, int? id) => command.Parameters.Add(new SqlParameter("@id", id));
 
