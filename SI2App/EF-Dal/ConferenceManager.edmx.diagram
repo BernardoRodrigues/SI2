@@ -5,17 +5,17 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="b97f46f22d4b40d1bca908b1da083664" Name="Diagram1">
-        <EntityTypeShape EntityType="SI2Model.Article" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="SI2Model.ArticleAuthor" Width="1.5" PointX="5.25" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SI2Model.Article" Width="1.5" PointX="2.375" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="SI2Model.ArticleAuthor" Width="1.5" PointX="7.5" PointY="3.625" IsExpanded="true" />
         <EntityTypeShape EntityType="SI2Model.ArticleReviewer" Width="1.5" PointX="5.25" PointY="3.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="SI2Model.ArticleState" Width="1.5" PointX="0.75" PointY="4.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="SI2Model.Author" Width="1.5" PointX="5.25" PointY="11.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="SI2Model.Conference" Width="1.5" PointX="0.75" PointY="10.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="SI2Model.ConferenceUser" Width="1.5" PointX="8.25" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="SI2Model.File" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="SI2Model.Institution" Width="1.5" PointX="0.75" PointY="6.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="SI2Model.Reviewer" Width="1.5" PointX="5.25" PointY="16.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="SI2Model.User" Width="1.5" PointX="3" PointY="6.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="SI2Model.ArticleState" Width="1.5" PointX="0.5" PointY="2.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="SI2Model.Author" Width="1.5" PointX="2.75" PointY="13" IsExpanded="true" />
+        <EntityTypeShape EntityType="SI2Model.Conference" Width="1.5" PointX="5.875" PointY="6.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="SI2Model.ConferenceUser" Width="1.5" PointX="7.625" PointY="10.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="SI2Model.File" Width="1.5" PointX="2.75" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="SI2Model.Institution" Width="1.5" PointX="0.5" PointY="8.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="SI2Model.Reviewer" Width="1.5" PointX="0.5" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SI2Model.User" Width="1.5" PointX="3.125" PointY="9.25" IsExpanded="true" />
         <AssociationConnector Association="SI2Model.FK__Article__stateId__3D5E1FD2" ManuallyRouted="false" />
         <AssociationConnector Association="SI2Model.FK__ArticleAu__artic__5441852A" ManuallyRouted="false" />
         <AssociationConnector Association="SI2Model.FK__ArticleRe__artic__5812160E" ManuallyRouted="false" />

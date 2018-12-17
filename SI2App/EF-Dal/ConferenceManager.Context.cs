@@ -39,13 +39,22 @@ namespace EF_Dal
         public virtual DbSet<Reviewer> Reviewers { get; set; }
         public virtual DbSet<User> Users { get; set; }
     
-        public virtual ObjectResult<GetCompatibleReviewersForArticle_Result> GetCompatibleReviewersForArticle(Nullable<int> articleId)
+        public virtual ObjectResult<User> GetCompatibleReviewersForArticle(Nullable<int> articleId)
         {
             var articleIdParameter = articleId.HasValue ?
                 new ObjectParameter("articleId", articleId) :
                 new ObjectParameter("articleId", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCompatibleReviewersForArticle_Result>("GetCompatibleReviewersForArticle", articleIdParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<User>("GetCompatibleReviewersForArticle", articleIdParameter);
+        }
+    
+        public virtual ObjectResult<User> GetCompatibleReviewersForArticle(Nullable<int> articleId, MergeOption mergeOption)
+        {
+            var articleIdParameter = articleId.HasValue ?
+                new ObjectParameter("articleId", articleId) :
+                new ObjectParameter("articleId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<User>("GetCompatibleReviewersForArticle", mergeOption, articleIdParameter);
         }
     }
 }

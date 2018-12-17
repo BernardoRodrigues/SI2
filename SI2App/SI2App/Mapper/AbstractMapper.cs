@@ -177,7 +177,7 @@
         protected void CheckEntityForNull(object entity, Type type)
         {
             if (entity == null)
-                throw new ArgumentException("The " + type + " to delete cannot be null");
+                throw new ArgumentException($"The {type} to delete cannot be null");
         }
     }
 }
