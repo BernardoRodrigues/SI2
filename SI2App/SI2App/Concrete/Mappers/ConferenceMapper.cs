@@ -4,8 +4,10 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
+    using System.Transactions;
     using SI2App.Dal;
     using SI2App.Mapper;
+    using SI2App.Mapper.Proxy;
     using SI2App.Model;
 
     public class ConferenceMapper : AbstractMapper<Conference, int?, List<Conference>>, IConferenceMapper
@@ -13,6 +15,48 @@
 
         public ConferenceMapper(IContext context) : base(context)
         {
+        }
+
+        #region LOADER METHODS
+        public List<Attendee> LoadAttendees(Conference c)
+        {
+            List<Attendee> res = new List<Attendee>();
+            AttendeeMapper am = new AttendeeMapper(context);
+            List<IDataParameter> parameters = new List<IDataParameter>();
+            parameters.Add(new SqlParameter("@id", c.Id));
+            var query = "Select userId from dbo.ConferenceUser where conferenceId=@id";
+            using(IDataReader rd = ExecuteReader(query, parameters))
+            {
+                while (rd.Read())
+                {
+                    int key = rd.GetInt32(0);
+                    res.Add(am.Read(key));
+                }
+            }
+            return res;
+        }
+        #endregion
+
+        public override Conference Delete(Conference conf)
+        {
+            CheckEntityForNull(conf, typeof(Conference));
+
+            using (TransactionScope ts = new TransactionScope(TransactionScopeOption.Required))
+            {
+                EnsureContext();
+                context.EnlistTransaction();
+                var attendees = conf.Attendees;
+                if(attendees != null && attendees.Count > 0)
+                {
+                    SqlParameter p = new SqlParameter("@confId", conf.Id);
+                    List<IDataParameter> parameters = new List<IDataParameter>();
+                    parameters.Add(p);
+                    ExecuteNonQuery("delete from dbo.ConferenceUser where conferenceId=@confId", parameters);
+                }
+                Conference del = base.Delete(conf);
+                ts.Complete();
+                return del;
+            }
         }
 
         protected override string Table => "Conference";
@@ -66,14 +110,19 @@
             command.Parameters.AddRange(parameters);    
         }
 
-        protected override Conference Map(IDataRecord record) =>  new Conference {
-                                                                            Id = record.GetInt32(0),
-                                                                            Name = record.GetString(1),
-                                                                            Year = record.GetInt32(2),
-                                                                            Acronym = record.GetString(3),
-                                                                            Grade = record.GetInt32(4),
-                                                                            SubmissionDate = record.GetDateTime(5)
-        };
+        protected override Conference Map(IDataRecord record)
+        {
+           Conference c =  new Conference
+                            {
+                                Id = record.GetInt32(0),
+                                Name = record.GetString(1),
+                                Year = record.GetInt32(2),
+                                Acronym = record.GetString(3),
+                                Grade = record.GetInt32(4),
+                                SubmissionDate = record.GetDateTime(5)
+                            };
+            return new ConferenceProxy(c, context);
+        }
         
 
         protected override void SelectParameters(IDbCommand command, int? id)

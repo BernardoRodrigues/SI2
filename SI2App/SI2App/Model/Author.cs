@@ -4,11 +4,11 @@
 
     public class Author : Attendee
     {
-        public List<int> ArticlesIds { get; set; }
+        public virtual List<Article> Articles { get; set; }
 
         public Author() : base()
         {
-            this.ArticlesIds = new List<int>();
+            this.Articles = new List<Article>();
         }
 
     }

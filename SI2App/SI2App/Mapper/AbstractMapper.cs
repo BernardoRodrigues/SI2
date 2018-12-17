@@ -160,5 +160,24 @@
                 return cmd.ExecuteReader(CommandBehavior.Default);
             }
         }
+
+        protected void ExecuteNonQuery(String commandText, List<IDataParameter> parameters)
+        {
+            using (IDbCommand cmd = context.CreateCommand())
+            {
+                if (parameters != null)
+                    cmd.Parameters.AddRange(parameters);
+
+                cmd.CommandText = commandText;
+                cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
+            }
+        }
+
+        protected void CheckEntityForNull(object entity, Type type)
+        {
+            if (entity == null)
+                throw new ArgumentException("The " + type + " to delete cannot be null");
+        }
     }
 }

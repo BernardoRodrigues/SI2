@@ -20,7 +20,7 @@
 
         protected override string SelectCommandText => $"{this.SelectAllCommandText} where id = @id AND articleId = @articleId";
 
-        protected override string UpdateCommandText => throw new NotImplementedException();
+        protected override string UpdateCommandText => "Update dbo.[File] set [file]=@file , insertionDate=@insertionDate where id = @id AND articleId = @articleId";
 
         protected override string DeleteCommandText => $"delete from {this.Table} where id = @id AND articleId = @articleId";
 
@@ -28,7 +28,17 @@
 
         protected override CommandType InsertCommandType => CommandType.StoredProcedure;
 
-        protected override void DeleteParameters(IDbCommand command, File entity) => throw new NotImplementedException();
+        protected override void DeleteParameters(IDbCommand command, File entity)
+        {
+            SqlParameter p1 = new SqlParameter("@id", entity.Id);
+            SqlParameter p2 = new SqlParameter("@articleId", entity.ArticleId);
+            List<SqlParameter> parameters = new List<SqlParameter>()
+            {
+                p1, p2
+            };
+            command.Parameters.AddRange(parameters);
+        }
+
         protected override void InsertParameters(IDbCommand command, File entity)
         {
             var articleId = new SqlParameter("@articleId", entity.ArticleId);

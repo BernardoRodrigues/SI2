@@ -8,9 +8,7 @@
 
         public int? Id { get; set; }
 
-        public ArticleState? StateId { get; set; }
-
-        public int ConferenceId { get; set; }
+        public ArticleState? State { get; set; }
 
         public string Summary { get; set; }
 
@@ -18,14 +16,19 @@
 
         public DateTime SubmissionDate { get; set; }
 
-        public List<int> AuthorsIds { get; set; }
+        public virtual Conference Conference { get; set; }
 
-        public List<int> ReviewersIds { get; set; } 
+        public virtual List<Author> Authors { get; set; }
+
+        public virtual List<Reviewer> Reviewers { get; set; } 
+
+        public virtual List<File> Files { get; set; }
 
         public Article()
         {
-            this.AuthorsIds = new List<int>();
-            this.ReviewersIds = new List<int>();
+            this.Authors = new List<Author>();
+            this.Reviewers = new List<Reviewer>();
+            this.Files = new List<File>();
         }
 
     }

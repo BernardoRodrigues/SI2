@@ -8,16 +8,14 @@ namespace SI2App.Mapper
     public class AttendeeProxy : Attendee
     {
         private IContext context;
-        private int? institutionId;
-
-        public AttendeeProxy(Attendee attendee, int? institutionId, IContext context) : base()
+       
+        public AttendeeProxy(Attendee attendee, IContext context) : base()
         {
             base.Id = attendee.Id;
             base.Name = attendee.Name;
             base.Email = attendee.Email;
             base.Conferences = null;
             base.Institution = null;
-            this.institutionId = institutionId;
             this.context = context;
             
         }

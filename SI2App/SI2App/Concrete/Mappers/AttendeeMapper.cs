@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
+    using System.Transactions;
 
     public class AttendeeMapper : AbstractMapper<Attendee, int?, List<Attendee>>, IUserMapper
     {
@@ -54,6 +55,27 @@
 
         #endregion
 
+        public override Attendee Delete(Attendee entity)
+        {
+            CheckEntityForNull(entity, typeof(Attendee));
+
+            using(TransactionScope ts = new TransactionScope(TransactionScopeOption.Required))
+            {
+                EnsureContext();
+                context.EnlistTransaction();
+                var conferences = entity.Conferences;
+                if(conferences != null && conferences.Count > 0)
+                {
+                    SqlParameter p = new SqlParameter("@userId", entity.Id);
+                    List<IDataParameter> parameters = new List<IDataParameter>();
+                    parameters.Add(p);
+                    ExecuteNonQuery("delete from dbo.ConferenceUser where userId=@userId", parameters);
+                }
+                Attendee del = base.Delete(entity);
+                ts.Complete();
+                return del;
+            }
+        }
         protected override string Table => "User";
 
         protected override string SelectAllCommandText => $"select id, name, email, institutionId from {this.Table}";
@@ -108,7 +130,7 @@
                 Email = record.GetString(2),
                 Name = record.GetString(4),
             };
-            return new AttendeeProxy(a, record.GetInt32(3), context);
+            return new AttendeeProxy(a, context);
         }
            
 
