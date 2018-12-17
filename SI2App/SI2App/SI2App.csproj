@@ -47,14 +47,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Concrete\ArticleMapper.cs" />
-    <Compile Include="Concrete\AuthorMapper.cs" />
-    <Compile Include="Concrete\ConferenceMapper.cs" />
     <Compile Include="Concrete\ConferenceRepository.cs" />
     <Compile Include="Concrete\Context.cs" />
-    <Compile Include="Concrete\AttendeeMapper.cs" />
-    <Compile Include="Concrete\IntitutionMapper.cs" />
-    <Compile Include="Concrete\ReviewerMapper.cs" />
+    <Compile Include="Concrete\Mappers\ArticleMapper.cs" />
+    <Compile Include="Concrete\Mappers\AttendeeMapper.cs" />
+    <Compile Include="Concrete\Mappers\AuthorMapper.cs" />
+    <Compile Include="Concrete\Mappers\ConferenceMapper.cs" />
+    <Compile Include="Concrete\Mappers\FileMapper.cs" />
+    <Compile Include="Concrete\Mappers\IntitutionMapper.cs" />
+    <Compile Include="Concrete\Mappers\ReviewerMapper.cs" />
     <Compile Include="Dal\IArticleRepository.cs" />
     <Compile Include="Dal\IAuthorRepository.cs" />
     <Compile Include="Dal\IConferenceRepository.cs" />

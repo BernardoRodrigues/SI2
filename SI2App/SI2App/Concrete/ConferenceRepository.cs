@@ -1,4 +1,6 @@
-﻿namespace SI2App.Concrete
+﻿using SI2App.Concrete.Mappers;
+
+namespace SI2App.Concrete
 {
     using System;
     using System.Collections.Generic;

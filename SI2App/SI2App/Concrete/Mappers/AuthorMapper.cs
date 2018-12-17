@@ -40,7 +40,8 @@
             InstitutionId = record.GetInt32(3)
         };
 
-        protected override void SelectParameters(IDbCommand command, int? id) => command.Parameters.Add(new SqlParameter("@id", id));
+        protected override void SelectParameters(IDbCommand command, int? id) => 
+            command.Parameters.Add(new SqlParameter("@id", id));
 
         protected override Author UpdateEntityId(IDbCommand command, Author entity)
         {
