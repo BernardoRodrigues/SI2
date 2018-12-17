@@ -29,16 +29,18 @@ namespace SI2App.Concrete.Mappers
 
         protected override void DeleteParameters(IDbCommand command, Article entity) => throw new NotImplementedException();
         protected override void InsertParameters(IDbCommand command, Article entity) => throw new NotImplementedException();
-        protected override Article Map(IDataRecord record) => 
-            new Article
+        protected override Article Map(IDataRecord record) {
+            
+            return new Article
             {
                 Id = record.GetInt32(0),
-                //StateId = record.GetInt32(1),
+                StateId = (ArticleState)record.GetInt32(1),
                 ConferenceId = record.GetInt32(2),
                 Summary = record.GetString(3),
                 Accepted = record.GetBoolean(4),
                 SubmissionDate = record.GetDateTime(5)
             };
+        }
         protected override void SelectParameters(IDbCommand command, int? id) => 
             command.Parameters.Add(new SqlParameter("@id", id));
         

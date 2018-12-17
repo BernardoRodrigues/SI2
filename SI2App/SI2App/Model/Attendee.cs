@@ -10,13 +10,13 @@
 
         public string Email { get; set; }
 
-        public int InstitutionId { get; set; }
+        public virtual Institution Institution { get; set; }
 
-        public List<int> ConferencesIds { get; set; }
+        public virtual List<Conference> Conferences { get; set; }
 
         public Attendee()
         {
-            this.ConferencesIds = new List<int>();
+            Conferences = new List<Conference>();
         }
     }
 }

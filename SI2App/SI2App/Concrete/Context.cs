@@ -7,46 +7,57 @@
 
     public class Context : IContext
     {
-        private string ConnectionString { get; set; }
-        private SqlConnection Connection { get; set; }
+        private string connectionString;
+        private SqlConnection con = null;
+
+        private ConferenceRepository _conferenceRepository;
 
         public Context(string cs)
         {
-            this.ConnectionString = cs;
+            connectionString = cs;
+            _conferenceRepository = new ConferenceRepository(this);
         }
 
         public SqlCommand CreateCommand()
         {
             this.Open();
-            return this.Connection.CreateCommand();
+            return con.CreateCommand();
         }
 
         public void Dispose()
         {
-            if (this.Connection != null)
+            if (con != null)
             {
-                this.Connection.Dispose();
-                this.Connection = null;
+                con.Dispose();
+                con = null;
             }
         }
 
         public void EnlistTransaction()
         {
-            if (this.Connection != null)
+            if (con != null)
             {
-                this.Connection.EnlistTransaction(Transaction.Current);
+                con.EnlistTransaction(Transaction.Current);
             }
         }
 
         public void Open()
         {
-            if (this.Connection == null)
+            if (con == null)
             {
-                this.Connection = new SqlConnection(this.ConnectionString);
+                con = new SqlConnection(connectionString);
             }
-            if (this.Connection.State != ConnectionState.Open)
+            if (con.State != ConnectionState.Open)
             {
-                this.Connection.Open();
+                con.Open();
+            }
+        }
+
+        public ConferenceRepository Conferences
+        {
+            get
+            {
+                return _conferenceRepository;
             }
         }
     }
