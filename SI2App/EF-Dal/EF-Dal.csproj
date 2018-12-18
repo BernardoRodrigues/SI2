@@ -72,6 +72,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ConferenceManager.Context.tt</DependentUpon>
     </Compile>
+    <Compile Include="ConferenceManager.Context.StoredProcedures.cs" />
     <Compile Include="ConferenceManager.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
