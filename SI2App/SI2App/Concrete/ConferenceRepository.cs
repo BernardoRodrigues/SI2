@@ -24,5 +24,11 @@ namespace SI2App.Concrete
         public IEnumerable<Conference> FindAll() => this.Mapper.ReadAll();
 
         public void Update(Conference entity) => this.Mapper.Update(entity);
+
+        public float PercentageOfAcceptedArticles(Conference c)
+        {
+            return Mapper.PercentageOfAcceptedArticles(c.Id.Value);
+        }
+
     }
 }

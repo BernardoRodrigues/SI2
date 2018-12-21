@@ -21,6 +21,7 @@ namespace SI2App.Mapper.Proxy
             base.SubmissionDate = c.SubmissionDate;
             base.Year = c.Year;
             base.Attendees = null;
+            base.Articles = null;
             this.context = context;
         }
 
@@ -36,6 +37,19 @@ namespace SI2App.Mapper.Proxy
             }
 
             set => base.Attendees = value;
+        }
+
+        public override List<Article> Articles {
+            get
+            {
+                if(base.Articles == null)
+                {
+                    ConferenceMapper cm = new ConferenceMapper(context);
+                    base.Articles = cm.LoadArticles(this);
+                }
+                return base.Attendees
+            }
+            set => base.Articles = value;
         }
     }
 }

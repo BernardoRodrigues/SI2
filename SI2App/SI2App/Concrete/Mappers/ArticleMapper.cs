@@ -149,6 +149,22 @@ namespace SI2App.Concrete.Mappers
                 command.ExecuteNonQuery();
             }
         }
+        public void RegisterRevision(int article, string text, int grade)
+        {
+            using (IDbCommand command = context.CreateCommand())
+            {
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+                command.CommandText = "RegisterRevision";
+                var parameters = new List<SqlParameter>
+                {
+                    new SqlParameter("@articleId", article),
+                    new SqlParameter("@revisionText", text),
+                    new SqlParameter("@grade", grade)
+                };
+                command.Parameters.AddRange(parameters);
+                command.ExecuteNonQuery();
+            }
+        }
         protected override string Table => "Article";
 
         protected override string SelectAllCommandText => $"select id, conferenceId, stateId, summary, accepted, submissionDate from {this.Table}";

@@ -22,6 +22,10 @@ namespace SI2App.Concrete
         {
             _mapper.AttributeRevision(article, reviewer);
         }
+        public void RegisterRevision(int article, string text, int grade)
+        {
+            _mapper.RegisterRevision(article, text, grade);
+        }
 
         public IEnumerable<Article> Find(Func<Article, bool> criteria)
         {

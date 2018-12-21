@@ -4,5 +4,6 @@
 
     public interface IConferenceRepository : IRepository<Conference>
     {
+        float PercentageOfAcceptedArticles(Conference c);
     }
 }

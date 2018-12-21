@@ -32,6 +32,8 @@ namespace SI2App
             methods.Add(Option.GiveRoleToUser, GiveRoleToUser);
             methods.Add(Option.ListCompatibleReviewers, ListCompatibleReviewers);
             methods.Add(Option.GiveRevisionToReviewer, GiveRevision);
+            methods.Add(Option.RegisterRevision, RegisterRevision);
+            methods.Add(Option.PercentageOfAcceptedSubmissions, AcceptedSubmissionsInPercentage);
         }
 
         private static void UpdateConference()
@@ -94,6 +96,27 @@ namespace SI2App
                 Console.ReadKey();
             }
         }
+        private static void RegisterRevision()
+        {
+            using (Context ctx = new Context(connectionString))
+            {
+                var articles = ctx.Articles;
+                articles.RegisterRevision(1, "Success", 100);
+                Console.WriteLine("Success!");
+                Console.ReadKey();
+            }
+        }
+        private static void AcceptedSubmissionsInPercentage()
+        {
+            using(Context ctx = new Context(connectionString))
+            {
+                var conferences = ctx.Conferences;
+                var first = conferences.FindAll().First();
+                var res = conferences.PercentageOfAcceptedArticles(first);
+                Console.WriteLine($"Percentage : {res}");
+                Console.ReadKey();
+            }
+        }
 
         private static void clearConsole()
         {
@@ -110,6 +133,8 @@ namespace SI2App
             Console.WriteLine("3. Atribuir um papel a um utilizador");
             Console.WriteLine("4. Listar os revisores compatíveis com uma revisão");
             Console.WriteLine("5. Atribuir um revisor a uma revisão");
+            Console.WriteLine("6. Registar uma revisão");
+            Console.WriteLine("7. Percentagem de submissões aceites de uma conferência");
             Console.Write("> ");
             var input = int.Parse(Console.ReadLine());
             userInput = (Option)(Enum.GetValues(typeof(Option)).GetValue(input));

@@ -58,6 +58,6 @@ insert into dbo.ArticleAuthor(articleId,authorId,isResponsible) values (3, 3, 1)
 insert into dbo.ArticleReviewer(articleId,reviewerId,grade,revisionText) values (1, 2, 50, 'TODO')
 insert into dbo.ArticleReviewer(articleId,reviewerId,grade,revisionText) values (2, 3, 75, 'TODO')
 insert into dbo.ArticleReviewer(articleId,reviewerId,grade,revisionText) values (3, 1, 40, 'TODO')
+
 use master 
 go
-

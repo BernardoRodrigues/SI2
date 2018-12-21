@@ -35,6 +35,23 @@
             }
             return res;
         }
+        public List<Article> LoadArticles(Conference c)
+        {
+            List<Article> res = new List<Article>();
+            ArticleMapper am = new ArticleMapper(context);
+            List<IDataParameter> parameters = new List<IDataParameter>();
+            parameters.Add(new SqlParameter("@id", c.Id));
+            var query = "Select id from Article where conferenceId=@id";
+            using (IDataReader rd = ExecuteReader(query, parameters))
+            {
+                while (rd.Read())
+                {
+                    int key = rd.GetInt32(0);
+                    res.Add(am.Read(key));
+                }
+            }
+            return res;
+        }
         #endregion
 
         public override Conference Delete(Conference conf)
@@ -58,7 +75,22 @@
                 return del;
             }
         }
-
+        public float PercentageOfAcceptedArticles(int conference)
+        {
+            using (IDbCommand command = context.CreateCommand())
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandText = "GetPercentageOfAcceptedArticles";
+                var percentage = new SqlParameter("@percentage", -1);
+                var id = new SqlParameter("@conferenceId", conference);
+                percentage.Direction = ParameterDirection.InputOutput;
+                command.Parameters.Add(percentage);
+                command.Parameters.Add(id);
+                command.ExecuteNonQuery();
+                var res = float.Parse(percentage.Value.ToString());
+                return res;
+            }
+        }
         protected override string Table => "Conference";
 
         protected override string SelectCommandText => $"{this.SelectAllCommandText} where id=@id";

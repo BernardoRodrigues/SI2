@@ -7,5 +7,7 @@
     {
         IEnumerable<Reviewer> GetCompatibleReviewers(int article);
         void AttributeRevision(int article, int reviewer);
+
+       void RegisterRevision(int article, string text, int grade);
     }
 }
