@@ -34,6 +34,8 @@
             return res;
         }
 
+        
+
         internal Institution LoadInstitution(Attendee a)
         {
             Institution institution = null;
@@ -76,7 +78,25 @@
                 return del;
             }
         }
-        protected override string Table => "User";
+
+        public void GiveRoleToUser(Attendee user, int role)
+        {
+            CheckEntityForNull(user, typeof(Attendee));
+            using (IDbCommand command = context.CreateCommand())
+            {
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+                command.CommandText = "GiveRoleToUser";
+                List<SqlParameter> parameters = new List<SqlParameter>
+                {
+                    new SqlParameter("@userId", user.Id),
+                    new SqlParameter("@role", role)
+                };
+                command.Parameters.AddRange(parameters);
+                command.ExecuteNonQuery();
+            }
+            
+        }
+        protected override string Table => "[User]";
 
         protected override string SelectAllCommandText => $"select id, name, email, institutionId from {this.Table}";
 
@@ -95,8 +115,7 @@
         protected override CommandType InsertCommandType => CommandType.StoredProcedure;
 
         protected override void DeleteParameters(IDbCommand command, Attendee entity) => command.Parameters.Add(new SqlParameter("@id", entity.Id));
-        
-        #pragma warning disable IDE0009 // Member access should be qualified.
+
         protected override void InsertParameters(IDbCommand command, Attendee entity)
         {
             var email = new SqlParameter("@email", entity.Email);
@@ -121,19 +140,17 @@
             }
             command.Parameters.AddRange(parameters);
         }
-#pragma warning restore IDE0009 // Member access should be qualified.
 
         protected override Attendee Map(IDataRecord record) {
             Attendee a = new Attendee
             {
                 Id = record.GetInt32(0),
                 Email = record.GetString(2),
-                Name = record.GetString(4),
+                Name = record.GetString(1)
             };
             return new AttendeeProxy(a, context);
         }
            
-
         protected override void SelectParameters(IDbCommand command, int? id) => command.Parameters.Add(new SqlParameter("@id", id));
 
         protected override Attendee UpdateEntityId(IDbCommand command, Attendee entity)

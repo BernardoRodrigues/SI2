@@ -22,5 +22,7 @@ namespace SI2App.Concrete
         public IEnumerable<Conference> Find(Func<Conference, bool> criteria) => this.FindAll().Where(criteria);
 
         public IEnumerable<Conference> FindAll() => this.Mapper.ReadAll();
+
+        public void Update(Conference entity) => this.Mapper.Update(entity);
     }
 }

@@ -23,6 +23,7 @@ namespace SI2App.Mapper
             base.Conference = null;
             base.Authors = null;
             base.Reviewers = null;
+            this.context = context;
         }
 
         public override Conference Conference {

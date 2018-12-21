@@ -4,5 +4,6 @@
 
     public interface IAttendeeRepository : IRepository<Attendee>
     {
+        void GiveRole(Attendee user, int role);
     }
 }

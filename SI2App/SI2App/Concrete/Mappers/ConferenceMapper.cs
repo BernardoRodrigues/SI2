@@ -65,13 +65,15 @@
 
         protected override string UpdateCommandText => "UpdateConference";
 
+        protected override CommandType UpdateCommandType => CommandType.StoredProcedure;
+
         protected override string DeleteCommandText => $"delete from {this.Table} where id = @id";
 
         protected override string InsertCommandText =>
             $@"insert into {this.Table}(name, year, acronym, grade, submissionDate) values (@name, @year, @acronym, @grade, @submissionDate); 
             select @id = scope_identity()";
 
-        protected override string SelectAllCommandText => $"select id, name, year, acrony, grade, submissionDate from {this.Table}";
+        protected override string SelectAllCommandText => $"select id, name, year, acronym, grade, submissionDate from {this.Table}";
 
         protected override void DeleteParameters(IDbCommand command, Conference entity)
         {
@@ -81,7 +83,7 @@
 
         protected override void InsertParameters(IDbCommand command, Conference entity)
         {
-            var id = new SqlParameter("@id", SqlDbType.Int)
+            var id = new SqlParameter("@conferenceId", SqlDbType.Int)
             {
                 Direction = ParameterDirection.InputOutput
             };
@@ -112,13 +114,18 @@
 
         protected override Conference Map(IDataRecord record)
         {
+            int? grade = null ;
+            if (!record.IsDBNull(4)) {
+                grade = record.GetInt32(4);
+            }
+           
            Conference c =  new Conference
                             {
                                 Id = record.GetInt32(0),
                                 Name = record.GetString(1),
                                 Year = record.GetInt32(2),
                                 Acronym = record.GetString(3),
-                                Grade = record.GetInt32(4),
+                                Grade = grade,
                                 SubmissionDate = record.GetDateTime(5)
                             };
             return new ConferenceProxy(c, context);
@@ -138,6 +145,10 @@
             return entity;
         }
 
-        protected override void UpdateParameters(IDbCommand command, Conference entity) => this.InsertParameters(command, entity);
+        protected override void UpdateParameters(IDbCommand command, Conference entity) {
+            this.InsertParameters(command, entity);
+        }
+
+            
     }
 }

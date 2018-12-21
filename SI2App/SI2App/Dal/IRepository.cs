@@ -8,6 +8,7 @@
 
         IEnumerable<T> FindAll();
         IEnumerable<T> Find(Func<T, bool> criteria);
+        void Update(T entity);
 
     }
 }

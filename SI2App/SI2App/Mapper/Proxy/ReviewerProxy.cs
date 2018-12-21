@@ -14,6 +14,11 @@ namespace SI2App.Mapper.Proxy
         private IContext context;
         public ReviewerProxy(Reviewer r, IContext context): base()
         {
+            base.Articles = r.Articles;
+            base.Email = r.Email;
+            base.Id = r.Id;
+            base.Institution = r.Institution;
+            base.Name = r.Name;
             this.context = context;
         }
 

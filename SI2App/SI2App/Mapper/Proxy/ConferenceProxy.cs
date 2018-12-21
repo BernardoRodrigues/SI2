@@ -21,6 +21,7 @@ namespace SI2App.Mapper.Proxy
             base.SubmissionDate = c.SubmissionDate;
             base.Year = c.Year;
             base.Attendees = null;
+            this.context = context;
         }
 
         public override List<Attendee> Attendees {

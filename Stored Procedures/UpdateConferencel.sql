@@ -3,7 +3,7 @@ use SI2
 go
 
 create procedure UpdateConference
-@conferenceId int,
+@conferenceId int out,
 @name nvarchar(256),
 @year int,
 @acronym nvarchar(128),

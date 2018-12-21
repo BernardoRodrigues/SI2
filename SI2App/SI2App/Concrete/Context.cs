@@ -10,12 +10,18 @@
         private string connectionString;
         private SqlConnection con = null;
 
-        private ConferenceRepository _conferenceRepository;
+        private IConferenceRepository _conferenceRepository;
+        private IAttendeeRepository _attendeeRepository;
+        private IArticleRepository _articleRepository;
+        private IReviewerRepository _reviewerRepository;
 
         public Context(string cs)
         {
             connectionString = cs;
             _conferenceRepository = new ConferenceRepository(this);
+            _attendeeRepository = new AttendeeRepository(this);
+            _articleRepository = new ArticleRepository(this);
+            _reviewerRepository = new ReviewerRepository(this);
         }
 
         public SqlCommand CreateCommand()
@@ -53,12 +59,27 @@
             }
         }
 
-        public ConferenceRepository Conferences
+        public IConferenceRepository Conferences
         {
             get
             {
                 return _conferenceRepository;
             }
+        }
+
+        public IAttendeeRepository Users
+        {
+            get => _attendeeRepository;
+        }
+
+        public IArticleRepository Articles
+        {
+            get => _articleRepository;
+        }
+
+        public IReviewerRepository Reviewers
+        {
+            get => _reviewerRepository;
         }
     }
 }

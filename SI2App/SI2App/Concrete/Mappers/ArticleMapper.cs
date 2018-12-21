@@ -115,6 +115,40 @@ namespace SI2App.Concrete.Mappers
             }
         }
 
+        public IEnumerable<Reviewer> GetCompatibleReviewers(int article)
+        {
+            var res = new List<Reviewer>();
+            using (IDbCommand command = context.CreateCommand())
+            {
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+                command.CommandText = "GetCompatibleReviewersForArticle";
+                command.Parameters.Add(new SqlParameter("@articleId", article));
+                using (IDataReader reader = command.ExecuteReader())
+                {
+                    ReviewerMapper rm = new ReviewerMapper(context);
+                    while (reader.Read())
+                    {
+                        res.Add(rm.Read(reader.GetInt32(0)));
+                    }
+                }
+            }
+            return res;
+        }
+        public void AttributeRevision(int article, int reviewer)
+        {
+            using (IDbCommand command = context.CreateCommand())
+            {
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+                command.CommandText = "AttributeReviewerToRevision";
+                var parameters = new List<SqlParameter>
+                {
+                    new SqlParameter("@articleId", article),
+                    new SqlParameter("@reviewerId", reviewer)
+                };
+                command.Parameters.AddRange(parameters);
+                command.ExecuteNonQuery();
+            }
+        }
         protected override string Table => "Article";
 
         protected override string SelectAllCommandText => $"select id, conferenceId, stateId, summary, accepted, submissionDate from {this.Table}";
@@ -130,13 +164,15 @@ namespace SI2App.Concrete.Mappers
         protected override void DeleteParameters(IDbCommand command, Article entity) => throw new NotImplementedException();
         protected override void InsertParameters(IDbCommand command, Article entity) => throw new NotImplementedException();
         protected override Article Map(IDataRecord record) {
-            
+            bool? accepted = null;
+            if (!record.IsDBNull(4))
+                accepted = record.GetBoolean(4);
             Article a = new Article
             {
                 Id = record.GetInt32(0),
                 State = (ArticleState)record.GetInt32(1),
                 Summary = record.GetString(3),
-                Accepted = record.GetBoolean(4),
+                Accepted = accepted,
                 SubmissionDate = record.GetDateTime(5)
             };
             return new ArticleProxy(a, context);
