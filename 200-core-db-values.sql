@@ -12,9 +12,22 @@ insert into dbo.Institution(name, address, country, acronym) values ('Massachuse
 insert into dbo.Institution(name, address, country, acronym) values ('Universidad Complutense de Madrid','Avda. de Séneca, 2 Madrid', 'Spain',' UCM')
 
 -- User
-insert into dbo.[User](email, institutionId, name) values ('0000@isel.ipl.pt', 1, 'A')
-insert into dbo.[User](email, institutionId, name) values ('0001@mit.edu.pt', 2, 'B')
-insert into dbo.[User](email, institutionId, name) values ('0002@ucm.edu.pt', 3, 'C')
+declare @user1 int
+declare @user2 int
+declare @user3 int
+insert into dbo.[User](email, institutionId, name) values ('0000@isel.ipl.pt', 1, 'A'); Select @user1 = SCOPE_IDENTITY();
+insert into dbo.[User](email, institutionId, name) values ('0001@mit.edu.pt', 2, 'B'); Select @user2 = SCOPE_IDENTITY();
+insert into dbo.[User](email, institutionId, name) values ('0002@ucm.edu.pt', 3, 'C'); Select @user3 = SCOPE_IDENTITY();
+
+-- Author
+insert into Author(authorId) values (@user1)
+insert into Author(authorId) values (@user2)
+insert into Author(authorId) values (@user3)
+
+-- Reviewer
+insert into Reviewer(reviewerId) values (@user1)
+insert into Reviewer(reviewerId) values (@user2)
+insert into Reviewer(reviewerId) values (@user3)
 
 -- Article
 insert into dbo.Article(conferenceId, stateId, summary, submissionDate) values (1, 1, 'TODO', DATETIMEFROMPARTS(2015, 01, 10,20,0,0,0)) 
@@ -35,6 +48,7 @@ insert into dbo.ConferenceUser(conferenceId, userId, registrationDate) values (1
 insert into dbo.ConferenceUser(conferenceId, userId, registrationDate) values (2, 3, DATETIMEFROMPARTS(2016, 03, 01,10,0,0,0))
 insert into dbo.ConferenceUser(conferenceId, userId, registrationDate) values (3, 3, DATETIMEFROMPARTS(2017, 03, 01,11,0,0,0))
 
+<<<<<<< HEAD
 -- Author
 insert into Author(authorId) values (1)
 insert into Author(authorId) values (2)
@@ -45,6 +59,8 @@ insert into Reviewer(reviewerId) values (1)
 insert into Reviewer(reviewerId) values (2)
 insert into Reviewer(reviewerId) values (3)
 
+=======
+>>>>>>> 990cce7b3d8687393f96f26cd9e0ae0af57235e0
 -- Article_Author
 insert into dbo.ArticleAuthor(articleId,authorId,isResponsible) values (1, 1, 1)
 insert into dbo.ArticleAuthor(articleId,authorId,isResponsible) values (2, 2, 1)
@@ -55,3 +71,6 @@ insert into dbo.ArticleAuthor(articleId,authorId,isResponsible) values (3, 3, 1)
 insert into dbo.ArticleReviewer(articleId,reviewerId,grade,revisionText) values (1, 2, 50, 'TODO')
 insert into dbo.ArticleReviewer(articleId,reviewerId,grade,revisionText) values (2, 3, 75, 'TODO')
 insert into dbo.ArticleReviewer(articleId,reviewerId,grade,revisionText) values (3, 1, 40, 'TODO')
+
+use master 
+go

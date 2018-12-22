@@ -162,6 +162,7 @@
             }
         }
 
+<<<<<<< HEAD
         public virtual TCol ReadWhere(Clauses clauses)
         {
             this.EnsureContext();
@@ -176,5 +177,25 @@
                 }
             }
         }
+=======
+        protected void ExecuteNonQuery(String commandText, List<IDataParameter> parameters)
+        {
+            using (IDbCommand cmd = context.CreateCommand())
+            {
+                if (parameters != null)
+                    cmd.Parameters.AddRange(parameters);
+
+                cmd.CommandText = commandText;
+                cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
+            }
+        }
+
+        protected void CheckEntityForNull(object entity, Type type)
+        {
+            if (entity == null)
+                throw new ArgumentException($"The {type} to delete cannot be null");
+        }
+>>>>>>> 990cce7b3d8687393f96f26cd9e0ae0af57235e0
     }
 }

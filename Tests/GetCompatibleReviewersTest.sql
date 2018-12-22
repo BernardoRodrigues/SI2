@@ -1,5 +1,5 @@
+--use master 
 use  SI2
-
 go
 
 prepare_list_compatible_reviewers_for_article_test:
@@ -29,10 +29,10 @@ values ('Instituto Superior do Porto', 'Portugal', 'ISP', 'Porto')
 declare @institutionId3 int
 select @institutionId3 = SCOPE_IDENTITY()
 
-insert into ArticleState (id, state) values (1, 'Submitted');
-insert into ArticleState (id, state) values (2, 'Under Review');
-insert into ArticleState (id, state) values (3, 'Accepted');
-insert into ArticleState (id, state) values (4, 'Rejected');
+--insert into ArticleState (id, state) values (1, 'Submitted');
+--insert into ArticleState (id, state) values (2, 'Under Review');
+--insert into ArticleState (id, state) values (3, 'Accepted');
+--insert into ArticleState (id, state) values (4, 'Rejected');
 
 -- not compatible Reviewer
 insert into [User] (email, name, institutionId) values ('xpto@gmail.com', 'Jon Doe', @institutionId)
@@ -117,7 +117,6 @@ delete from Institution
 delete from [File]
 delete from Article
 delete from Conference
-delete from ArticleState
 dbcc checkident ('User', reseed, 0)
 dbcc checkident ('Institution', reseed, 0)
 dbcc checkident ('File', reseed, 0)

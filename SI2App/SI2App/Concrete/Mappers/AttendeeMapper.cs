@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
+    using System.Transactions;
 
     public class AttendeeMapper : AbstractMapper<Attendee, int?, List<Attendee>>, IUserMapper
     {
@@ -14,6 +15,7 @@
         {
         }
 
+<<<<<<< HEAD
         internal List<Conference> LoadConferences(Attendee attendee)
         {
             var conferences = new List<Conference>();
@@ -32,6 +34,90 @@
         }
 
         protected override string Table => "User";
+=======
+        #region LOADER METHODS  
+        internal List<Conference> LoadConferences(Attendee a)
+        {
+            List<Conference> res = new List<Conference>();
+            ConferenceMapper cm = new ConferenceMapper(context);
+            List<IDataParameter> parameters = new List<IDataParameter>();
+            parameters.Add(new SqlParameter("@id", a.Id));
+            var query = "Select conferenceId from dbo.ConferenceUser where userId=@id";
+            using (IDataReader reader = ExecuteReader(query, parameters))
+            {
+                while (reader.Read())
+                {
+                    int key = reader.GetInt32(0);
+                    res.Add(cm.Read(key));
+                }
+            }
+            return res;
+        }
+
+        
+
+        internal Institution LoadInstitution(Attendee a)
+        {
+            Institution institution = null;
+            InstitutionMapper im = new InstitutionMapper(context);
+            List<IDataParameter> parameters = new List<IDataParameter>();
+            parameters.Add(new SqlParameter("@id", a.Id));
+            var query = "Select institutionId from [User] where id=@id";
+            using (IDataReader rd = ExecuteReader(query, parameters))
+            {
+                while (rd.Read())
+                {
+                    int key = rd.GetInt32(0);
+                    institution = im.Read(key);
+                }
+            }
+
+            return institution;
+        }
+
+        #endregion
+
+        public override Attendee Delete(Attendee entity)
+        {
+            CheckEntityForNull(entity, typeof(Attendee));
+
+            using(TransactionScope ts = new TransactionScope(TransactionScopeOption.Required))
+            {
+                EnsureContext();
+                context.EnlistTransaction();
+                var conferences = entity.Conferences;
+                if(conferences != null && conferences.Count > 0)
+                {
+                    SqlParameter p = new SqlParameter("@userId", entity.Id);
+                    List<IDataParameter> parameters = new List<IDataParameter>();
+                    parameters.Add(p);
+                    ExecuteNonQuery("delete from dbo.ConferenceUser where userId=@userId", parameters);
+                }
+                Attendee del = base.Delete(entity);
+                ts.Complete();
+                return del;
+            }
+        }
+
+        public void GiveRoleToUser(Attendee user, int role)
+        {
+            CheckEntityForNull(user, typeof(Attendee));
+            using (IDbCommand command = context.CreateCommand())
+            {
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+                command.CommandText = "GiveRoleToUser";
+                List<SqlParameter> parameters = new List<SqlParameter>
+                {
+                    new SqlParameter("@userId", user.Id),
+                    new SqlParameter("@role", role)
+                };
+                command.Parameters.AddRange(parameters);
+                command.ExecuteNonQuery();
+            }
+            
+        }
+        protected override string Table => "[User]";
+>>>>>>> 990cce7b3d8687393f96f26cd9e0ae0af57235e0
 
         protected override string SelectAllCommandText => $"select id, name, email, institutionId from {this.Table}";
 
@@ -50,21 +136,23 @@
         protected override CommandType InsertCommandType => CommandType.StoredProcedure;
 
         protected override void DeleteParameters(IDbCommand command, Attendee entity) => command.Parameters.Add(new SqlParameter("@id", entity.Id));
-        
-        #pragma warning disable IDE0009 // Member access should be qualified.
+
         protected override void InsertParameters(IDbCommand command, Attendee entity)
         {
             var email = new SqlParameter("@email", entity.Email);
-            var institutionId = new SqlParameter("@institutionId", entity.InstitutionId);
+            var institutionId = new SqlParameter("@institutionId", entity.Institution == null ? null : entity.Institution.Id);
             var name = new SqlParameter("@name", entity.Name);
+<<<<<<< HEAD
             var conferenceId = new SqlParameter("@conferenceId", entity.Conferences[0]);
+=======
+>>>>>>> 990cce7b3d8687393f96f26cd9e0ae0af57235e0
             var id = new SqlParameter("@id", DbType.Int32)
             {
                 Direction = ParameterDirection.InputOutput
             };
             var parameters = new List<SqlParameter>
             {
-                email, institutionId, name, id, conferenceId
+                email, institutionId, name, id
             };
 
             if (entity.Id != null)
@@ -77,17 +165,17 @@
             }
             command.Parameters.AddRange(parameters);
         }
-#pragma warning restore IDE0009 // Member access should be qualified.
 
-        protected override Attendee Map(IDataRecord record) => 
-            new Attendee
+        protected override Attendee Map(IDataRecord record) {
+            Attendee a = new Attendee
             {
                 Id = record.GetInt32(0),
-                Name = record.GetString(1),
                 Email = record.GetString(2),
-                InstitutionId = record.GetInt32(3)
+                Name = record.GetString(1)
             };
-
+            return new AttendeeProxy(a, context);
+        }
+           
         protected override void SelectParameters(IDbCommand command, int? id) => command.Parameters.Add(new SqlParameter("@id", id));
 
         protected override Attendee UpdateEntityId(IDbCommand command, Attendee entity)

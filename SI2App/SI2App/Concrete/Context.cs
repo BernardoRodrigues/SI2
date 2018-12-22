@@ -7,47 +7,79 @@
 
     public class Context : IContext
     {
-        private string ConnectionString { get; set; }
-        private SqlConnection Connection { get; set; }
+        private string connectionString;
+        private SqlConnection con = null;
+
+        private IConferenceRepository _conferenceRepository;
+        private IAttendeeRepository _attendeeRepository;
+        private IArticleRepository _articleRepository;
+        private IReviewerRepository _reviewerRepository;
 
         public Context(string cs)
         {
-            this.ConnectionString = cs;
+            connectionString = cs;
+            _conferenceRepository = new ConferenceRepository(this);
+            _attendeeRepository = new AttendeeRepository(this);
+            _articleRepository = new ArticleRepository(this);
+            _reviewerRepository = new ReviewerRepository(this);
         }
 
         public SqlCommand CreateCommand()
         {
             this.Open();
-            return this.Connection.CreateCommand();
+            return con.CreateCommand();
         }
 
         public void Dispose()
         {
-            if (this.Connection != null)
+            if (con != null)
             {
-                this.Connection.Dispose();
-                this.Connection = null;
+                con.Dispose();
+                con = null;
             }
         }
 
         public void EnlistTransaction()
         {
-            if (this.Connection != null)
+            if (con != null)
             {
-                this.Connection.EnlistTransaction(Transaction.Current);
+                con.EnlistTransaction(Transaction.Current);
             }
         }
 
         public void Open()
         {
-            if (this.Connection == null)
+            if (con == null)
             {
-                this.Connection = new SqlConnection(this.ConnectionString);
+                con = new SqlConnection(connectionString);
             }
-            if (this.Connection.State != ConnectionState.Open)
+            if (con.State != ConnectionState.Open)
             {
-                this.Connection.Open();
+                con.Open();
             }
+        }
+
+        public IConferenceRepository Conferences
+        {
+            get
+            {
+                return _conferenceRepository;
+            }
+        }
+
+        public IAttendeeRepository Users
+        {
+            get => _attendeeRepository;
+        }
+
+        public IArticleRepository Articles
+        {
+            get => _articleRepository;
+        }
+
+        public IReviewerRepository Reviewers
+        {
+            get => _reviewerRepository;
         }
     }
 }

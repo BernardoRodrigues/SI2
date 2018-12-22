@@ -8,9 +8,9 @@
     using System.Data;
     using System.Data.SqlClient;
 
-    public class IntitutionMapper : AbstractMapper<Institution, int?, List<Institution>>, IInstitutionMapper
+    public class InstitutionMapper : AbstractMapper<Institution, int?, List<Institution>>, IInstitutionMapper
     {
-        public IntitutionMapper(IContext context) : base(context)
+        public InstitutionMapper(IContext context) : base(context)
         {
         }
 

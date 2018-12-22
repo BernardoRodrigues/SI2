@@ -4,6 +4,7 @@ go
 
 create procedure RegisterRevision
 @articleId int,
+@reviewerId int,
 @revisionText nvarchar(1024),
 @grade int
 as
@@ -11,7 +12,7 @@ begin try
 	begin transaction
 		update ArticleReviewer
 		set revisionText = @revisionText, grade = @grade
-		where articleId = @articleId
+		where articleId = @articleId AND reviewerId = @reviewerId
 	commit transaction
 end try
 begin catch

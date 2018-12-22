@@ -8,9 +8,7 @@
 
         public int? Id { get; set; }
 
-        public ArticleState? StateId { get; set; }
-
-        public int ConferenceId { get; set; }
+        public ArticleState? State { get; set; }
 
         public string Summary { get; set; }
 
@@ -18,10 +16,19 @@
 
         public DateTime SubmissionDate { get; set; }
 
+<<<<<<< HEAD
         public virtual List<Author> Authors { get; set; }
 
         public virtual List<Reviewer> Reviewers { get; set; } 
 
+=======
+        public virtual Conference Conference { get; set; }
+
+        public virtual List<Author> Authors { get; set; }
+
+        public virtual List<Reviewer> Reviewers { get; set; } 
+
+>>>>>>> 990cce7b3d8687393f96f26cd9e0ae0af57235e0
         public virtual List<File> Files { get; set; }
 
         public Article()

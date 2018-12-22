@@ -4,7 +4,7 @@ go
 
 create procedure AttributeReviewerToRevision
 @articleId int,
-@reviewerId nvarchar(256)
+@reviewerId int
 as
 begin try
 	begin transaction
