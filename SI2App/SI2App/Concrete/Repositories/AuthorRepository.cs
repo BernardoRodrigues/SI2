@@ -19,5 +19,11 @@
         public IEnumerable<Author> Find(Clauses clauses) => this.Mapper.ReadWhere(clauses);
 
         public IEnumerable<Author> FindAll() => this.Mapper.ReadAll();
+
+        public Author Delete(Author entity) => this.Mapper.Delete(entity);
+
+        public Author Update(Author entity) => this.Mapper.Update(entity);
+
+        public Author Create(Author entity) => this.Mapper.Create(entity);
     }
 }

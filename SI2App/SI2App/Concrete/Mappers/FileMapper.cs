@@ -20,15 +20,17 @@
 
         protected override string SelectCommandText => $"{this.SelectAllCommandText} where id = @id AND articleId = @articleId";
 
-        protected override string UpdateCommandText => throw new NotImplementedException();
+        protected override string UpdateCommandText => throw new InvalidOperationException("File does not need updates");
 
-        protected override string DeleteCommandText => $"delete from {this.Table} where id = @id AND articleId = @articleId";
+        protected override string DeleteCommandText => "DeleteFile";
+
+        protected override CommandType DeleteCommandType => CommandType.StoredProcedure;
 
         protected override string InsertCommandText => "InsertFile";
 
         protected override CommandType InsertCommandType => CommandType.StoredProcedure;
 
-        protected override void DeleteParameters(IDbCommand command, File entity) => throw new NotImplementedException();
+        protected override void DeleteParameters(IDbCommand command, File entity) => command.Parameters.Add(new SqlParameter("@articleId", entity.ArticleId));
         protected override void InsertParameters(IDbCommand command, File entity)
         {
             var articleId = new SqlParameter("@articleId", entity.ArticleId);
@@ -40,7 +42,13 @@
 
             command.Parameters.AddRange(new List<SqlParameter> { articleId, file, id });
         }
-        protected override File Map(IDataRecord record) => throw new NotImplementedException();
+        protected override File Map(IDataRecord record) => new File
+        {
+            Id = record.GetInt32(0),
+            ArticleId = record.GetInt32(1),
+            SubmittedFile = (byte[])record.GetValue(2),
+            InsertionDate = record.GetDateTime(3)
+        };
         protected override void SelectParameters(IDbCommand command, Tuple<int, int?> id) => throw new NotImplementedException();
         protected override File UpdateEntityId(IDbCommand command, File entity) => throw new NotImplementedException();
         protected override void UpdateParameters(IDbCommand command, File entity) => throw new NotImplementedException();

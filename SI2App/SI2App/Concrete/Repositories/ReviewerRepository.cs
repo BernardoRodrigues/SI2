@@ -19,5 +19,11 @@
         public IEnumerable<Reviewer> Find(Clauses clauses) => this.Mapper.ReadWhere(clauses);
 
         public IEnumerable<Reviewer> FindAll() => this.Mapper.ReadAll();
+
+        public Reviewer Delete(Reviewer entity) => this.Mapper.Delete(entity);
+
+        public Reviewer Update(Reviewer entity) => this.Mapper.Update(entity);
+
+        public Reviewer Create(Reviewer entity) => this.Mapper.Create(entity);
     }
 }

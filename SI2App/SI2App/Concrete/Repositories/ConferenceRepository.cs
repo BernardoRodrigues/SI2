@@ -19,5 +19,11 @@
         public IEnumerable<Conference> Find(Clauses clauses) => this.Mapper.ReadWhere(clauses); 
 
         public IEnumerable<Conference> FindAll() => this.Mapper.ReadAll();
+
+        public Conference Delete(Conference entity) => this.Mapper.Delete(entity);
+
+        public Conference Update(Conference entity) => this.Mapper.Update(entity);
+
+        public Conference Create(Conference entity) => this.Mapper.Create(entity);
     }
 }

@@ -1,7 +1,5 @@
 ﻿namespace SI2App.Mapper
 {
-    using SI2App.Concrete;
-
     public interface IMapper<T, TId, TCol>
     {
 

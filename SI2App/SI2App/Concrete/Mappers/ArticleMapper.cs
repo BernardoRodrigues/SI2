@@ -11,6 +11,23 @@
     public class ArticleMapper : AbstractMapper<Article, int?, List<Article>>, IArticleMapper
     {
 
+        internal List<File> LoadFiles(Article article)
+        {
+            var files = new List<File>();
+            var mapper = new FileMapper(this.context);
+
+            var parameters = new List<IDataParameter>
+            {
+                new SqlParameter("@id", article.Id)
+            };
+
+            using (var reader = this.ExecuteReader("select fileId from [File] where articleId = @id", parameters))
+            {
+                while (reader.Read()) files.Add(mapper.Read(new Tuple<int, int?>(article.Id.Value, reader.GetInt32(0))));
+            }
+            return files;
+        }
+
         internal List<Author> LoadAuthors(Article article)
         {
             var authors = new List<Author>();
@@ -57,14 +74,33 @@
 
         protected override string UpdateCommandText => $"UpdateSubmission";
 
-        protected override string DeleteCommandText => "DeleteSubmission";
+        protected override CommandType UpdateCommandType => CommandType.StoredProcedure;
 
-        protected override string InsertCommandText => "InsertSubmission";
+        protected override string DeleteCommandText => "DeleteArticle";
 
-        public override Article Create(Article entity) => base.Create(entity);
+        protected override CommandType DeleteCommandType => CommandType.StoredProcedure;
 
-        protected override void DeleteParameters(IDbCommand command, Article entity) => throw new NotImplementedException();
-        protected override void InsertParameters(IDbCommand command, Article entity) => throw new NotImplementedException();
+        protected override string InsertCommandText => "InsertArticle";
+
+        protected override CommandType InsertCommandType => CommandType.StoredProcedure;
+
+        protected override void DeleteParameters(IDbCommand command, Article entity) => command.Parameters.Add(new SqlParameter("@articleId", entity.Id));
+
+        protected override void InsertParameters(IDbCommand command, Article entity)
+        {
+
+            var parameters = new List<IDataParameter>
+            {
+                new SqlParameter("@conferenceId", entity.ConferenceId),
+                new SqlParameter("@summary", entity.Summary),
+                new SqlParameter("@articleId", DbType.Int32)
+                {
+                    Direction = ParameterDirection.Output
+                }
+            };
+            command.Parameters.AddRange(parameters);
+
+        }
 
         protected override Article Map(IDataRecord record) =>
             new ArticleProxy(
@@ -77,8 +113,23 @@
                 this.context
             );
 
-        protected override void SelectParameters(IDbCommand command, int? id) => throw new NotImplementedException();
-        protected override Article UpdateEntityId(IDbCommand command, Article entity) => throw new NotImplementedException();
-        protected override void UpdateParameters(IDbCommand command, Article entity) => throw new NotImplementedException();
+        protected override void SelectParameters(IDbCommand command, int? id) => command.Parameters.Add(new SqlParameter("@id", id));
+
+        protected override Article UpdateEntityId(IDbCommand command, Article entity)
+        {
+            var parameter = command.Parameters["@id"] as SqlParameter;
+            entity.Id = int.Parse(parameter.Value.ToString());
+            return entity;
+        }
+
+        protected override void UpdateParameters(IDbCommand command, Article entity)
+        {
+            var parameters = new List<IDataParameter>
+            {
+                new SqlParameter("@conferenceId", entity.ConferenceId),
+                new SqlParameter("@summary", entity.Summary),
+                new SqlParameter("@articleId", entity.Id)
+            };
+        }
     }
 }

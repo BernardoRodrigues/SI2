@@ -16,7 +16,7 @@ create table dbo.Conference (
 	[year] int check (year > 0) not null,
 	acronym nvarchar(128) not null,
 	grade int check (grade >= 0 AND grade <= 100),
-	submissionDate date not null
+	submissionDate date
 )
 
 create table dbo.ArticleState (

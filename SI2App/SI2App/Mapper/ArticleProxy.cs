@@ -9,6 +9,7 @@
     public class ArticleProxy : Article
     {
         private IContext Context { get; set; }
+        private ArticleMapper Mapper { get; set; }
 
         public ArticleProxy(int id, ArticleState state, int conferenceId, string summary, bool accepted, DateTime submissionDate, IContext context) : base()
         {
@@ -18,6 +19,21 @@
             this.Accepted = accepted;
             this.SubmissionDate = submissionDate;
             this.Context = context;
+            this.Mapper = new ArticleMapper(context);
+        }
+
+        public override List<File> Files
+        {
+            get
+            {
+                if (base.Files == null)
+                {
+                    var mapper = new ArticleMapper(this.Context);
+                    base.Files = mapper.LoadFiles(this);
+                }
+                return base.Files;
+            }
+            set => base.Files = value;
         }
 
         public override List<Author> Authors

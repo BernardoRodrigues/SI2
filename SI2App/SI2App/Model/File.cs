@@ -7,13 +7,13 @@
     public class File
     {
 
-        public int? Id { get; private set; }
+        public int? Id { get; set; }
 
-        public int ArticleId { get; private set; }
+        public int ArticleId { get; set; }
 
-        public byte[] SubmittedFile { get; private set; }
+        public byte[] SubmittedFile { get; set; }
 
-        public DateTime? SubmissionDate { get; private set; }
+        public DateTime? InsertionDate { get; set; }
 
         public async Task AddFile(FileStream stream)
         {

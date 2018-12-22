@@ -22,10 +22,13 @@
 
         public virtual List<Reviewer> Reviewers { get; set; } 
 
+        public virtual List<File> Files { get; set; }
+
         public Article()
         {
             this.Authors = new List<Author>();
             this.Reviewers = new List<Reviewer>();
+            this.Files = new List<File>();
         }
 
     }

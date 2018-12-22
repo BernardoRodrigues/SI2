@@ -41,10 +41,10 @@
         protected override string DeleteCommandText => $"delete from {this.Table} where id = @id";
 
         protected override string InsertCommandText =>
-            $@"insert into {this.Table}(name, year, acronym, grade, submissionDate) values (@name, @year, @acronym, @grade, @submissionDate); 
+            $@"insert into {this.Table}(name, year, acronym) values (@name, @year, @acronym); 
             select @id = scope_identity()";
 
-        protected override string SelectAllCommandText => $"select id, name, year, acrony, grade, submissionDate from {this.Table}";
+        protected override string SelectAllCommandText => $"select id, name, year, acronym, grade, submissionDate from {this.Table}";
 
         protected override void DeleteParameters(IDbCommand command, Conference entity)
         {
@@ -61,8 +61,17 @@
             var name = new SqlParameter("@name", entity.Name);
             var year = new SqlParameter("@year", entity.Year);
             var acronym = new SqlParameter("@acronym", entity.Acronym);
-            var grade = new SqlParameter("@grade", entity.Grade);
-            var submissionDate = new SqlParameter("@submissionDate", entity.SubmissionDate);
+            SqlParameter grade;
+            if (entity.Grade.HasValue)
+                grade = new SqlParameter("@grade", entity.Grade);
+            else
+                grade = new SqlParameter("@grade", DBNull.Value);
+
+            SqlParameter submissionDate;
+            if (entity.Grade.HasValue)
+                submissionDate = new SqlParameter("@submissionDate", entity.SubmissionDate);
+            else
+                submissionDate = new SqlParameter("@submissionDate", DBNull.Value);
             var parameters = new List<SqlParameter>()
             {
 #pragma warning disable IDE0009 // Member access should be qualified.
@@ -83,14 +92,15 @@
             command.Parameters.AddRange(parameters);    
         }
 
-        protected override Conference Map(IDataRecord record) =>  new Conference {
-                                                                            Id = record.GetInt32(0),
-                                                                            Name = record.GetString(1),
-                                                                            Year = record.GetInt32(2),
-                                                                            Acronym = record.GetString(3),
-                                                                            Grade = record.GetInt32(4),
-                                                                            SubmissionDate = record.GetDateTime(5)
-        };
+        protected override Conference Map(IDataRecord record) =>  new ConferenceProxy (
+                                                                            record.GetInt32(0),
+                                                                            record.GetString(1),
+                                                                            record.GetInt32(2),
+                                                                            record.GetString(3),
+                                                                            record.IsDBNull(4)? null : (float?)record.GetValue(4),
+                                                                            record.IsDBNull(4) ? null: (DateTime?)record.GetValue(5),
+                                                                            this.context
+        );
         
 
         protected override void SelectParameters(IDbCommand command, int? id)

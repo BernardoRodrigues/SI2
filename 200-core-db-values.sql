@@ -6,12 +6,6 @@ insert into dbo.Conference(name,[year], acronym, submissionDate) values('Web Sum
 insert into dbo.Conference(name,[year], acronym,submissionDate) values('Web Summit', 2016 , 'WS16', DATEFROMPARTS(2016,03,31))
 insert into dbo.Conference(name,[year], acronym,submissionDate) values('Web Summit', 2017 , 'WS17', DATEFROMPARTS(2017,03,31))
 
--- Article State
-insert into dbo.ArticleState(id,[state]) values(1, 'Submitted') 
-insert into dbo.ArticleState(id,[state]) values(2, 'Under Review')
-insert into dbo.ArticleState(id,[state]) values(3, 'Rejected')
-insert into dbo.ArticleState(id,[state]) values(4, 'Accepted')
-
 --Institution
 insert into dbo.Institution(name, address, country, acronym) values ('Instituto Superior de Engenharia de Lisboa','Rua Conselheiro Emídio Navarro, 1 Lisboa','Portugal', 'ISEL')
 insert into dbo.Institution(name, address, country, acronym) values ('Massachusetts Institute of Technology', '	Cambridge, Massachusetts, U.S','United States of America', 'MIT')
@@ -41,15 +35,15 @@ insert into dbo.ConferenceUser(conferenceId, userId, registrationDate) values (1
 insert into dbo.ConferenceUser(conferenceId, userId, registrationDate) values (2, 3, DATETIMEFROMPARTS(2016, 03, 01,10,0,0,0))
 insert into dbo.ConferenceUser(conferenceId, userId, registrationDate) values (3, 3, DATETIMEFROMPARTS(2017, 03, 01,11,0,0,0))
 
----- Author
---insert into Author(authorEmail) values ('0000@isel.ipl.pt')
---insert into Author(authorEmail) values ('0001@mit.edu.pt')
---insert into Author(authorEmail) values ('0002@ucm.edu.pt')
+-- Author
+insert into Author(authorId) values (1)
+insert into Author(authorId) values (2)
+insert into Author(authorId) values (3)
 
----- Reviewer
---insert into Reviewer(reviewerEmail) values ('0000@isel.ipl.pt')
---insert into Reviewer(reviewerEmail) values ('0001@mit.edu.pt')
---insert into Reviewer(reviewerEmail) values ('0002@ucm.edu.pt')
+-- Reviewer
+insert into Reviewer(reviewerId) values (1)
+insert into Reviewer(reviewerId) values (2)
+insert into Reviewer(reviewerId) values (3)
 
 -- Article_Author
 insert into dbo.ArticleAuthor(articleId,authorId,isResponsible) values (1, 1, 1)

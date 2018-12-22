@@ -14,7 +14,7 @@
 
         public string Acronym { get; set; }
 
-        public int? Grade { get; set; }
+        public float? Grade { get; set; }
 
         public DateTime? SubmissionDate { get; set; }
 

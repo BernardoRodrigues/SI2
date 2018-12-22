@@ -19,5 +19,11 @@
         public IEnumerable<Institution> Find(Clauses clauses) => this.Mapper.ReadWhere(clauses);
 
         public IEnumerable<Institution> FindAll() => this.Mapper.ReadAll();
+
+        public Institution Delete(Institution entity) => this.Mapper.Delete(entity);
+
+        public Institution Update(Institution entity) => this.Mapper.Update(entity);
+
+        public Institution Create(Institution entity) => this.Mapper.Create(entity);
     }
 }
