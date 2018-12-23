@@ -23,7 +23,9 @@
 
             var parameters = new List<IDataParameter>
             {
+#pragma warning disable IDE0009 // Member access should be qualified.
                 new SqlParameter("@id", reviewer.Id)
+#pragma warning restore IDE0009 // Member access should be qualified.
             };
 
             using (var reader = this.ExecuteReader("select articleId from ArticleReviewer where reviewerId = @id", parameters))
@@ -55,10 +57,12 @@
         protected override Reviewer Map(IDataRecord record) =>
             new ReviewerProxy
             (
-                record.GetInt32(0),
-                record.GetString(2),
-                record.GetString(1),
-                record.GetInt32(3),
+                new Reviewer {
+                    Id = record.GetInt32(0),
+                    Name = record.GetString(2),
+                    Email = record.GetString(1),
+                    Institution = new InstitutionMapper(this.context).Read(record.GetInt32(3))
+                },
                 this.context
             );
 
@@ -79,7 +83,15 @@
             var institutionId = new SqlParameter("@institutionId", entity.Institution == null ? null : entity.Institution.Id);
             var parameters = new List<SqlParameter>
             {
+#pragma warning disable IDE0009 // Member access should be qualified.
+#pragma warning disable IDE0009 // Member access should be qualified.
+#pragma warning disable IDE0009 // Member access should be qualified.
+#pragma warning disable IDE0009 // Member access should be qualified.
                 id, name, email, institutionId
+#pragma warning restore IDE0009 // Member access should be qualified.
+#pragma warning restore IDE0009 // Member access should be qualified.
+#pragma warning restore IDE0009 // Member access should be qualified.
+#pragma warning restore IDE0009 // Member access should be qualified.
             };
 
             command.Parameters.AddRange(parameters);

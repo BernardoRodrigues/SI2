@@ -25,7 +25,9 @@
 
             var parameters = new List<IDataParameter>
             {
+#pragma warning disable IDE0009 // Member access should be qualified.
                 new SqlParameter("@id", conference.Id)
+#pragma warning restore IDE0009 // Member access should be qualified.
             };
 
             using (var reader = this.ExecuteReader("select userId from ConferenceUser where conferenceId = @id", parameters))
@@ -35,49 +37,43 @@
             return attendees;
         }
 
-        public List<Article> LoadArticles(Conference c)
-        {
-            var res = new List<Article>();
-            var am = new ArticleMapper(context);
-            var parameters = new List<IDataParameter>();
-            parameters.Add(new SqlParameter("@id", c.Id));
-            var query = "Select id from Article where conferenceId=@id";
-            using (var rd = ExecuteReader(query, parameters))
-            {
-                while (rd.Read())
-                {
-                    var key = rd.GetInt32(0);
-                    res.Add(am.Read(key));
-                }
-            }
-            return res;
-        }
+        public List<Article> LoadArticles(Conference c) => new ArticleMapper(this.context).ReadWhere(new Clauses().Equals(c.Id.Value, "conferenceId"));
         #endregion
 
         public override Conference Delete(Conference conf)
         {
-            CheckEntityForNull(conf, typeof(Conference));
+            this.CheckEntityForNull(conf, typeof(Conference));
 
             using (var ts = new TransactionScope(TransactionScopeOption.Required))
             {
-                EnsureContext();
-                context.EnlistTransaction();
+                this.EnsureContext();
+                this.context.EnlistTransaction();
                 var attendees = conf.Attendees;
                 if (attendees != null && attendees.Count > 0)
                 {
                     var p = new SqlParameter("@confId", conf.Id);
-                    var parameters = new List<IDataParameter>();
-                    parameters.Add(p);
-                    ExecuteNonQuery("delete from dbo.ConferenceUser where conferenceId=@confId", parameters);
+                    var parameters = new List<IDataParameter>
+                    {
+#pragma warning disable IDE0009 // Member access should be qualified.
+                        p
+#pragma warning restore IDE0009 // Member access should be qualified.
+                    };
+                    this.ExecuteNonQuery("delete from dbo.ConferenceUser where conferenceId=@confId", parameters);
+                }
+                var articleMapper = new ArticleMapper(this.context);
+                foreach (var a in this.LoadArticles(conf))
+                {
+                    articleMapper.Delete(a);
                 }
                 var del = base.Delete(conf);
                 ts.Complete();
                 return del;
             }
         }
+
         public float PercentageOfAcceptedArticles(int conference)
         {
-            using (IDbCommand command = context.CreateCommand())
+            using (IDbCommand command = this.context.CreateCommand())
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "GetPercentageOfAcceptedArticles";
@@ -129,7 +125,7 @@
                 grade = new SqlParameter("@grade", DBNull.Value);
 
             SqlParameter submissionDate;
-            if (entity.Grade.HasValue)
+            if (entity.SubmissionDate.HasValue)
                 submissionDate = new SqlParameter("@submissionDate", entity.SubmissionDate);
             else
                 submissionDate = new SqlParameter("@submissionDate", DBNull.Value);
@@ -153,14 +149,17 @@
             command.Parameters.AddRange(parameters);
         }
 
-        protected override Conference Map(IDataRecord record) => new ConferenceProxy(
-                                                                            record.GetInt32(0),
-                                                                            record.GetString(1),
-                                                                            record.GetInt32(2),
-                                                                            record.GetString(3),
-                                                                            record.IsDBNull(4) ? null : (float?)record.GetValue(4),
-                                                                            record.IsDBNull(4) ? null : (DateTime?)record.GetValue(5),
-                                                                            this.context
+        protected override Conference Map(IDataRecord record) =>
+            new ConferenceProxy(
+                new Conference { 
+                Id = record.GetInt32(0),
+                Name = record.GetString(1),
+                Year = record.GetInt32(2),
+                Acronym = record.GetString(3),
+                Grade = record.IsDBNull(4) ? null : (float?)record.GetValue(4),
+                SubmissionDate = record.IsDBNull(4) ? null : (DateTime?)record.GetValue(5)
+                },
+                this.context
         );
 
 
@@ -178,11 +177,6 @@
             return entity;
         }
 
-        protected override void UpdateParameters(IDbCommand command, Conference entity)
-        {
-            this.InsertParameters(command, entity);
-        }
-
-
+        protected override void UpdateParameters(IDbCommand command, Conference entity) => this.InsertParameters(command, entity);
     }
 }

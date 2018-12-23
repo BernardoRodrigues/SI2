@@ -16,14 +16,15 @@ namespace SI2App
         GiveRevisionToReviewer,
         RegisterRevision,
         PercentageOfAcceptedSubmissions,
+            
     }
 
     delegate void IWorker();
     class App
     { 
         private static Dictionary<Option, IWorker> methods = new Dictionary<Option, IWorker>();
-        private static string connectionString = ConfigurationManager.ConnectionStrings["cs"].ConnectionString;
-        private static void init()
+        private static readonly string connectionString = ConfigurationManager.ConnectionStrings["cs"].ConnectionString;
+        private static void Init()
         {
             methods.Add(Option.Exit, () => Console.WriteLine("Goodbye! Press any key..."));
             methods.Add(Option.UpdateConference, UpdateConference);
@@ -56,7 +57,7 @@ namespace SI2App
             {
 
                 var repo = ctx.Users;
-                var user = repo.Find(new Clauses().Equals("0000@isel.ipl.pt", "email")).First();
+                var user = repo.Find(new Clauses().Equals("'0000@isel.ipl.pt'", "email")).First();
                 repo.GiveRole(user, 0);
                 Console.WriteLine($"{user.Name} is now a Reviewer");
                 Console.ReadKey();
@@ -99,7 +100,7 @@ namespace SI2App
             using (var ctx = new Context(connectionString))
             {
                 var articles = ctx.Articles;
-                articles.RegisterRevision(1, "Success", 100);
+                articles.RegisterRevision(1, 2,"Success", 100);
                 Console.WriteLine("Success!");
                 Console.ReadKey();
             }
@@ -118,7 +119,7 @@ namespace SI2App
 
         private static void ClearConsole()
         {
-            for (var y = 0; y < 25; y++) //console is 80 columns and 25 lines
+            for (var y = 0; y < 5; y++) //console is 80 columns and 25 lines
                 Console.WriteLine("\n");
         }
 
@@ -135,12 +136,12 @@ namespace SI2App
             Console.WriteLine("7. Percentagem de submissões aceites de uma conferência");
             Console.Write("> ");
             var input = int.Parse(Console.ReadLine());
-            userInput = (Option)(Enum.GetValues(typeof(Option)).GetValue(input));
+            userInput = (Option)Enum.GetValues(typeof(Option)).GetValue(input);
             return userInput;
         }
         public static void Main(string[] args)
         {
-            init();
+            Init();
 
             var userInput = Option.Unknown;
             do
@@ -150,7 +151,8 @@ namespace SI2App
                     userInput = ShowMenu();
                     methods[userInput]();
                     ClearConsole();
-                }catch(Exception e)
+                }
+                catch (Exception e)
                 {
                     Console.WriteLine($"Error : {e.Message}");
                     Console.ReadKey();

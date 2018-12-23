@@ -2,12 +2,12 @@
 {
     using SI2App.Dal;
     using SI2App.Mapper;
+    using SI2App.Mapper.Proxy;
     using SI2App.Model;
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
-    using System.Transactions;
 
     public class AttendeeMapper : AbstractMapper<Attendee, int?, List<Attendee>>, IUserMapper
     {
@@ -22,7 +22,9 @@
             var mapper = new ConferenceMapper(this.context);
             var parameters = new List<IDataParameter>
             {
+#pragma warning disable IDE0009 // Member access should be qualified.
                 new SqlParameter("@id", attendee.Id)
+#pragma warning restore IDE0009 // Member access should be qualified.
             };
 
             using (var reader = this.ExecuteReader("select userId from ConferenceUser where userId = @id", parameters))
@@ -38,11 +40,15 @@
         internal Institution LoadInstitution(Attendee a)
         {
             Institution institution = null;
-            var im = new InstitutionMapper(context);
-            var parameters = new List<IDataParameter>();
-            parameters.Add(new SqlParameter("@id", a.Id));
+            var im = new InstitutionMapper(this.context);
+            var parameters = new List<IDataParameter>
+            {
+#pragma warning disable IDE0009 // Member access should be qualified.
+                new SqlParameter("@id", a.Id)
+#pragma warning restore IDE0009 // Member access should be qualified.
+            };
             var query = "Select institutionId from [User] where id=@id";
-            using (var rd = ExecuteReader(query, parameters))
+            using (var rd = this.ExecuteReader(query, parameters))
             {
                 while (rd.Read())
                 {
@@ -56,39 +62,21 @@
 
         #endregion
 
-        public override Attendee Delete(Attendee entity)
-        {
-            CheckEntityForNull(entity, typeof(Attendee));
-
-            using(var ts = new TransactionScope(TransactionScopeOption.Required))
-            {
-                EnsureContext();
-                context.EnlistTransaction();
-                var conferences = entity.Conferences;
-                if(conferences != null && conferences.Count > 0)
-                {
-                    var p = new SqlParameter("@userId", entity.Id);
-                    var parameters = new List<IDataParameter>();
-                    parameters.Add(p);
-                    ExecuteNonQuery("delete from dbo.ConferenceUser where userId=@userId", parameters);
-                }
-                var del = base.Delete(entity);
-                ts.Complete();
-                return del;
-            }
-        }
-
         public void GiveRoleToUser(Attendee user, int role)
         {
-            CheckEntityForNull(user, typeof(Attendee));
-            using (IDbCommand command = context.CreateCommand())
+            this.CheckEntityForNull(user, typeof(Attendee));
+            using (IDbCommand command = this.context.CreateCommand())
             {
-                command.CommandType = System.Data.CommandType.StoredProcedure;
+                command.CommandType = CommandType.StoredProcedure;
                 command.CommandText = "GiveRoleToUser";
                 var parameters = new List<SqlParameter>
                 {
+#pragma warning disable IDE0009 // Member access should be qualified.
                     new SqlParameter("@userId", user.Id),
+#pragma warning restore IDE0009 // Member access should be qualified.
+#pragma warning disable IDE0009 // Member access should be qualified.
                     new SqlParameter("@role", role)
+#pragma warning restore IDE0009 // Member access should be qualified.
                 };
                 command.Parameters.AddRange(parameters);
                 command.ExecuteNonQuery();
@@ -127,7 +115,15 @@
             };
             var parameters = new List<SqlParameter>
             {
+#pragma warning disable IDE0009 // Member access should be qualified.
+#pragma warning disable IDE0009 // Member access should be qualified.
+#pragma warning disable IDE0009 // Member access should be qualified.
+#pragma warning disable IDE0009 // Member access should be qualified.
                 email, institutionId, name, id
+#pragma warning restore IDE0009 // Member access should be qualified.
+#pragma warning restore IDE0009 // Member access should be qualified.
+#pragma warning restore IDE0009 // Member access should be qualified.
+#pragma warning restore IDE0009 // Member access should be qualified.
             };
 
             if (entity.Id != null)
@@ -147,9 +143,10 @@
             {
                 Id = record.GetInt32(0),
                 Email = record.GetString(2),
-                Name = record.GetString(1)
+                Name = record.GetString(1),
+                Institution = new InstitutionMapper(this.context).Read(record.GetInt32(3))
             };
-            return new AttendeeProxy(a, context);
+            return new AttendeeProxy(a, this.context);
         }
 
         protected override void SelectParameters(IDbCommand command, int? id) => command.Parameters.Add(new SqlParameter("@id", id));

@@ -41,7 +41,13 @@
                 Direction = ParameterDirection.Output
             };
 
+#pragma warning disable IDE0009 // Member access should be qualified.
+#pragma warning disable IDE0009 // Member access should be qualified.
+#pragma warning disable IDE0009 // Member access should be qualified.
             command.Parameters.AddRange(new List<SqlParameter> { articleId, file, id });
+#pragma warning restore IDE0009 // Member access should be qualified.
+#pragma warning restore IDE0009 // Member access should be qualified.
+#pragma warning restore IDE0009 // Member access should be qualified.
         }
         protected override File Map(IDataRecord record) => new File
         {
@@ -50,8 +56,14 @@
             SubmittedFile = (byte[])record.GetValue(2),
             InsertionDate = record.GetDateTime(3)
         };
-        protected override void SelectParameters(IDbCommand command, Tuple<int, int?> id) => throw new NotImplementedException();
-        protected override File UpdateEntityId(IDbCommand command, File entity) => throw new NotImplementedException();
+        protected override void SelectParameters(IDbCommand command, Tuple<int, int?> id) => 
+#pragma warning disable IDE0009 // Member access should be qualified.
+#pragma warning disable IDE0009 // Member access should be qualified.
+            command.Parameters.AddRange(new List<SqlParameter> { new SqlParameter("@id", id.Item2), new SqlParameter("@articleId", id.Item1)});
+#pragma warning restore IDE0009 // Member access should be qualified.
+#pragma warning restore IDE0009 // Member access should be qualified.
+
+        protected override File UpdateEntityId(IDbCommand command, File entity) { entity.Id = int.Parse(command.Parameters["@id"].ToString()); return entity; }
         protected override void UpdateParameters(IDbCommand command, File entity) => throw new NotImplementedException();
     }
 }

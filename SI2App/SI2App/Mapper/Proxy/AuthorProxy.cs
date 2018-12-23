@@ -7,9 +7,13 @@ namespace SI2App.Mapper.Proxy
 {
     class AuthorProxy : Author
     {
-        private IContext context;
+        private readonly IContext context;
         public AuthorProxy(Author a, IContext context ) : base()
         {
+            this.Id = a.Id;
+            this.Name = a.Name;
+            this.Email = a.Email;
+            this.Institution = a.Institution;
             this.context = context;
         }
 
@@ -18,7 +22,7 @@ namespace SI2App.Mapper.Proxy
             {
                 if(base.Articles == null)
                 {
-                    var am = new AuthorMapper(context);
+                    var am = new AuthorMapper(this.context);
                     base.Articles = am.LoadArticles(this);
                 }
                 return base.Articles;

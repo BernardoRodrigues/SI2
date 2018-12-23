@@ -49,7 +49,17 @@
             };
             var parameters = new List<SqlParameter>
             {
+#pragma warning disable IDE0009 // Member access should be qualified.
+#pragma warning disable IDE0009 // Member access should be qualified.
+#pragma warning disable IDE0009 // Member access should be qualified.
+#pragma warning disable IDE0009 // Member access should be qualified.
+#pragma warning disable IDE0009 // Member access should be qualified.
                 name, address, country, acronym, id
+#pragma warning restore IDE0009 // Member access should be qualified.
+#pragma warning restore IDE0009 // Member access should be qualified.
+#pragma warning restore IDE0009 // Member access should be qualified.
+#pragma warning restore IDE0009 // Member access should be qualified.
+#pragma warning restore IDE0009 // Member access should be qualified.
             };
 
             if (entity.Id != null)

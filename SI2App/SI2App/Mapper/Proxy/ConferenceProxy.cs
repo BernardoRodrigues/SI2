@@ -7,15 +7,15 @@ namespace SI2App.Mapper.Proxy
 {
     class ConferenceProxy : Conference
     {
-        private IContext context;
+        private readonly IContext context;
         public ConferenceProxy(Conference c, IContext context) :base()
         {
-            base.Acronym = c.Acronym;
-            base.Grade = c.Grade;
-            base.Id = c.Id;
-            base.Name = c.Name;
-            base.SubmissionDate = c.SubmissionDate;
-            base.Year = c.Year;
+            this.Acronym = c.Acronym;
+            this.Grade = c.Grade;
+            this.Id = c.Id;
+            this.Name = c.Name;
+            this.SubmissionDate = c.SubmissionDate;
+            this.Year = c.Year;
             base.Attendees = null;
             base.Articles = null;
             this.context = context;
@@ -26,7 +26,7 @@ namespace SI2App.Mapper.Proxy
             {
                 if(base.Attendees == null)
                 {
-                    var cm = new ConferenceMapper(context);
+                    var cm = new ConferenceMapper(this.context);
                     base.Attendees = cm.LoadAttendees(this);
                 }
                 return base.Attendees;
@@ -40,10 +40,10 @@ namespace SI2App.Mapper.Proxy
             {
                 if(base.Articles == null)
                 {
-                    var cm = new ConferenceMapper(context);
+                    var cm = new ConferenceMapper(this.context);
                     base.Articles = cm.LoadArticles(this);
                 }
-                return base.Attendees
+                return base.Articles;
             }
             set => base.Articles = value;
         }

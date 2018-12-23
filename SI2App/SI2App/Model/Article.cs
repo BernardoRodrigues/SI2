@@ -22,6 +22,8 @@
 
         public virtual List<File> Files { get; set; }
 
+        public Conference Conference { get; set; }
+
         public Article()
         {
             this.Authors = new List<Author>();

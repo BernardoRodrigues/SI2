@@ -23,7 +23,9 @@
 
             var parameters = new List<IDataParameter>
             {
+#pragma warning disable IDE0009 // Member access should be qualified.
                 new SqlParameter("@id", author.Id)
+#pragma warning restore IDE0009 // Member access should be qualified.
             };
 
             using (var reader = this.ExecuteReader("select articleId from ArticleAuthor where authorId = @id", parameters))
@@ -64,8 +66,9 @@
                 Id = record.GetInt32(0),
                 Name = record.GetString(1),
                 Email = record.GetString(2),
+                Institution = new InstitutionMapper(this.context).Read(record.GetInt32(3))
             };
-            return new AuthorProxy(a, context);
+            return new AuthorProxy(a, this.context);
         }
 
         protected override void SelectParameters(IDbCommand command, int? id) =>
@@ -86,7 +89,15 @@
             var institutionId = new SqlParameter("@institutionId", entity.Institution == null ? null : entity.Institution.Id);
             var parameters = new List<SqlParameter>
             {
+#pragma warning disable IDE0009 // Member access should be qualified.
+#pragma warning disable IDE0009 // Member access should be qualified.
+#pragma warning disable IDE0009 // Member access should be qualified.
+#pragma warning disable IDE0009 // Member access should be qualified.
                 id, name, email, institutionId
+#pragma warning restore IDE0009 // Member access should be qualified.
+#pragma warning restore IDE0009 // Member access should be qualified.
+#pragma warning restore IDE0009 // Member access should be qualified.
+#pragma warning restore IDE0009 // Member access should be qualified.
             };
 
             command.Parameters.AddRange(parameters);

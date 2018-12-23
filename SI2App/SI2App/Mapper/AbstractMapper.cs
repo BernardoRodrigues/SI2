@@ -175,9 +175,9 @@
                 }
             }
         }
-        protected void ExecuteNonQuery(String commandText, List<IDataParameter> parameters)
+        protected void ExecuteNonQuery(string commandText, List<IDataParameter> parameters)
         {
-            using (IDbCommand cmd = context.CreateCommand())
+            using (IDbCommand cmd = this.context.CreateCommand())
             {
                 if (parameters != null)
                     cmd.Parameters.AddRange(parameters);

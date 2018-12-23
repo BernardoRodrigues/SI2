@@ -7,14 +7,14 @@ namespace SI2App.Mapper.Proxy
 {
     class ReviewerProxy : Reviewer
     {
-        private IContext context;
+        private readonly IContext context;
         public ReviewerProxy(Reviewer r, IContext context): base()
         {
             base.Articles = r.Articles;
-            base.Email = r.Email;
-            base.Id = r.Id;
+            this.Email = r.Email;
+            this.Id = r.Id;
             base.Institution = r.Institution;
-            base.Name = r.Name;
+            this.Name = r.Name;
             this.context = context;
         }
 
@@ -23,7 +23,7 @@ namespace SI2App.Mapper.Proxy
             {
                 if(base.Articles == null)
                 {
-                    var rm = new ReviewerMapper(context);
+                    var rm = new ReviewerMapper(this.context);
                     base.Articles = rm.LoadArticles(this);
                 }
                 return base.Articles;

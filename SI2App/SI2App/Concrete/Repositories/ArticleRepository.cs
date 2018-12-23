@@ -26,10 +26,10 @@
 
         public Article Create(Article entity) => this.Mapper.Create(entity);
 
-        public IEnumerable<Reviewer> GetCompatibleReviewers(int article) => throw new System.NotImplementedException();
+        public IEnumerable<Reviewer> GetCompatibleReviewers(int article) => this.Mapper.GetCompatibleReviewers(article);
 
-        public void AttributeRevision(int article, int reviewer) => throw new System.NotImplementedException();
+        public void AttributeRevision(int article, int reviewer) => this.Mapper.AttributeRevision(article, reviewer);
 
-        public void RegisterRevision(int article, string text, int grade) => throw new System.NotImplementedException();
+        public void RegisterRevision(int article, int reviewerId, string text, int grade) => this.Mapper.RegisterRevision(article, reviewerId, text, grade);
     }
 }

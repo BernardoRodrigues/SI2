@@ -1,5 +1,6 @@
 ﻿namespace SI2App.Concrete
 {
+    using SI2App.Concrete.Repositories;
     using SI2App.Dal;
     using System.Data;
     using System.Data.SqlClient;
@@ -9,7 +10,6 @@
     {
         private readonly string connectionString;
         private SqlConnection con = null;
-        private readonly IReviewerRepository _reviewerRepository;
 
         public Context(string cs)
         {
@@ -17,7 +17,7 @@
             this.Conferences = new ConferenceRepository(this);
             this.Users = new AttendeeRepository(this);
             this.Articles = new ArticleRepository(this);
-            this._reviewerRepository = new ReviewerRepository(this);
+            this.Reviewers = new ReviewerRepository(this);
         }
 
         public SqlCommand CreateCommand()
@@ -61,6 +61,6 @@
 
         public IArticleRepository Articles { get; }
 
-        public IReviewerRepository Reviewers => this._reviewerRepository;
+        public IReviewerRepository Reviewers { get; }
     }
 }

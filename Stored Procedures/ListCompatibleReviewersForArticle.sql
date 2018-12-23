@@ -9,7 +9,7 @@ create procedure GetCompatibleReviewersForArticle
 as
 begin try
 	begin transaction
-	select * from [User] U where not exists(
+	select U.id, U.name, U.email, U.institutionId from [User] U where not exists(
 			select * from ArticleAuthor AA where articleId = @articleId and AA.authorId = U.id 
 			) 
 			and not exists(							
