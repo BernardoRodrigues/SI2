@@ -13,6 +13,11 @@
     public class ConferenceMapper : AbstractMapper<Conference, int?, List<Conference>>, IConferenceMapper
     {
 
+        public ConferenceMapper(IContext context) : base(context)
+        {
+        }
+
+        #region LOADER METHODS
         internal List<Attendee> LoadAttendees(Conference conference)
         {
             var attendees = new List<Attendee>();
@@ -30,40 +35,18 @@
             return attendees;
         }
 
-        public ConferenceMapper(IContext context) : base(context)
-        {
-        }
-
-        #region LOADER METHODS
-        public List<Attendee> LoadAttendees(Conference c)
-        {
-            List<Attendee> res = new List<Attendee>();
-            AttendeeMapper am = new AttendeeMapper(context);
-            List<IDataParameter> parameters = new List<IDataParameter>();
-            parameters.Add(new SqlParameter("@id", c.Id));
-            var query = "Select userId from dbo.ConferenceUser where conferenceId=@id";
-            using(IDataReader rd = ExecuteReader(query, parameters))
-            {
-                while (rd.Read())
-                {
-                    int key = rd.GetInt32(0);
-                    res.Add(am.Read(key));
-                }
-            }
-            return res;
-        }
         public List<Article> LoadArticles(Conference c)
         {
-            List<Article> res = new List<Article>();
-            ArticleMapper am = new ArticleMapper(context);
-            List<IDataParameter> parameters = new List<IDataParameter>();
+            var res = new List<Article>();
+            var am = new ArticleMapper(context);
+            var parameters = new List<IDataParameter>();
             parameters.Add(new SqlParameter("@id", c.Id));
             var query = "Select id from Article where conferenceId=@id";
-            using (IDataReader rd = ExecuteReader(query, parameters))
+            using (var rd = ExecuteReader(query, parameters))
             {
                 while (rd.Read())
                 {
-                    int key = rd.GetInt32(0);
+                    var key = rd.GetInt32(0);
                     res.Add(am.Read(key));
                 }
             }
@@ -75,19 +58,19 @@
         {
             CheckEntityForNull(conf, typeof(Conference));
 
-            using (TransactionScope ts = new TransactionScope(TransactionScopeOption.Required))
+            using (var ts = new TransactionScope(TransactionScopeOption.Required))
             {
                 EnsureContext();
                 context.EnlistTransaction();
                 var attendees = conf.Attendees;
-                if(attendees != null && attendees.Count > 0)
+                if (attendees != null && attendees.Count > 0)
                 {
-                    SqlParameter p = new SqlParameter("@confId", conf.Id);
-                    List<IDataParameter> parameters = new List<IDataParameter>();
+                    var p = new SqlParameter("@confId", conf.Id);
+                    var parameters = new List<IDataParameter>();
                     parameters.Add(p);
                     ExecuteNonQuery("delete from dbo.ConferenceUser where conferenceId=@confId", parameters);
                 }
-                Conference del = base.Delete(conf);
+                var del = base.Delete(conf);
                 ts.Complete();
                 return del;
             }
@@ -167,40 +150,20 @@
                 id.Value = DBNull.Value;
             }
 
-            command.Parameters.AddRange(parameters);    
+            command.Parameters.AddRange(parameters);
         }
 
-<<<<<<< HEAD
-        protected override Conference Map(IDataRecord record) =>  new ConferenceProxy (
+        protected override Conference Map(IDataRecord record) => new ConferenceProxy(
                                                                             record.GetInt32(0),
                                                                             record.GetString(1),
                                                                             record.GetInt32(2),
                                                                             record.GetString(3),
-                                                                            record.IsDBNull(4)? null : (float?)record.GetValue(4),
-                                                                            record.IsDBNull(4) ? null: (DateTime?)record.GetValue(5),
+                                                                            record.IsDBNull(4) ? null : (float?)record.GetValue(4),
+                                                                            record.IsDBNull(4) ? null : (DateTime?)record.GetValue(5),
                                                                             this.context
         );
-=======
-        protected override Conference Map(IDataRecord record)
-        {
-            int? grade = null ;
-            if (!record.IsDBNull(4)) {
-                grade = record.GetInt32(4);
-            }
-           
-           Conference c =  new Conference
-                            {
-                                Id = record.GetInt32(0),
-                                Name = record.GetString(1),
-                                Year = record.GetInt32(2),
-                                Acronym = record.GetString(3),
-                                Grade = grade,
-                                SubmissionDate = record.GetDateTime(5)
-                            };
-            return new ConferenceProxy(c, context);
-        }
->>>>>>> 990cce7b3d8687393f96f26cd9e0ae0af57235e0
-        
+
+
 
         protected override void SelectParameters(IDbCommand command, int? id)
         {
@@ -215,10 +178,11 @@
             return entity;
         }
 
-        protected override void UpdateParameters(IDbCommand command, Conference entity) {
+        protected override void UpdateParameters(IDbCommand command, Conference entity)
+        {
             this.InsertParameters(command, entity);
         }
 
-            
+
     }
 }

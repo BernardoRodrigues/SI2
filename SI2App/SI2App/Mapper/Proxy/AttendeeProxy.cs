@@ -24,7 +24,7 @@ namespace SI2App.Mapper
             get {
                 if(base.Institution == null)
                 {
-                    AttendeeMapper mapper = new AttendeeMapper(context);
+                    var mapper = new AttendeeMapper(context);
                     base.Institution = mapper.LoadInstitution(this);
                 }
                 return base.Institution;
@@ -38,7 +38,7 @@ namespace SI2App.Mapper
             {
                 if(base.Institution == null)
                 {
-                    AttendeeMapper mapper = new AttendeeMapper(context);
+                    var mapper = new AttendeeMapper(context);
                     base.Conferences = mapper.LoadConferences(this);
                 }
                 return base.Conferences;

@@ -5,11 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{58AA74FD-E075-48EA-A1DC-B2A13ED74CE5}</ProjectGuid>
-<<<<<<< HEAD
-    <OutputType>Library</OutputType>
-=======
     <OutputType>Exe</OutputType>
->>>>>>> 990cce7b3d8687393f96f26cd9e0ae0af57235e0
     <RootNamespace>SI2App</RootNamespace>
     <AssemblyName>SI2App</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
@@ -37,11 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-<<<<<<< HEAD
-    <StartupObject />
-=======
+
     <StartupObject>SI2App.App</StartupObject>
->>>>>>> 990cce7b3d8687393f96f26cd9e0ae0af57235e0
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -63,7 +56,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
+
     <Compile Include="Clauses.cs" />
     <Compile Include="Concrete\ContextFactory.cs" />
     <Compile Include="Concrete\Mappers\ArticleMapper.cs" />
@@ -81,7 +74,7 @@
     <Compile Include="Concrete\Repositories\FileRepository.cs" />
     <Compile Include="Concrete\Repositories\InstitutionRepository.cs" />
     <Compile Include="Concrete\Repositories\ReviewerRepository.cs" />
-=======
+
     <Compile Include="App.cs" />
     <Compile Include="Concrete\AttendeeRepository.cs" />
     <Compile Include="Concrete\ConferenceRepository.cs" />
@@ -95,7 +88,7 @@
     <Compile Include="Concrete\Mappers\InstitutionMapper.cs" />
     <Compile Include="Concrete\Mappers\ReviewerMapper.cs" />
     <Compile Include="Concrete\ReviewerRepository.cs" />
->>>>>>> 990cce7b3d8687393f96f26cd9e0ae0af57235e0
+
     <Compile Include="Dal\IArticleRepository.cs" />
     <Compile Include="Dal\IAuthorRepository.cs" />
     <Compile Include="Dal\IConferenceRepository.cs" />
@@ -106,12 +99,12 @@
     <Compile Include="Dal\IReviewerRepository.cs" />
     <Compile Include="Dal\IAttendeeRepository.cs" />
     <Compile Include="Mapper\AbstractMapper.cs" />
-<<<<<<< HEAD
+
     <Compile Include="Mapper\ArticleProxy.cs" />
     <Compile Include="Mapper\ConferenceProxy.cs" />
-=======
+
     <Compile Include="Mapper\Proxy\ArticleProxy.cs" />
->>>>>>> 990cce7b3d8687393f96f26cd9e0ae0af57235e0
+
     <Compile Include="Mapper\IArticleMapper.cs" />
     <Compile Include="Mapper\IAuthorMapper.cs" />
     <Compile Include="Mapper\IConferenceMapper.cs" />
@@ -120,15 +113,15 @@
     <Compile Include="Mapper\IMapper.cs" />
     <Compile Include="Mapper\IReviewerMapper.cs" />
     <Compile Include="Mapper\IUserMapper.cs" />
-<<<<<<< HEAD
+
     <Compile Include="Mapper\AttendeeProxy.cs" />
     <Compile Include="Mapper\ReviewerProxy.cs" />
-=======
+
     <Compile Include="Mapper\Proxy\AttendeeProxy.cs" />
     <Compile Include="Mapper\Proxy\AuthorProxy.cs" />
     <Compile Include="Mapper\Proxy\ConferenceProxy.cs" />
     <Compile Include="Mapper\Proxy\ReviewerProxy.cs" />
->>>>>>> 990cce7b3d8687393f96f26cd9e0ae0af57235e0
+
     <Compile Include="Model\Article.cs" />
     <Compile Include="Model\ArticleState.cs" />
     <Compile Include="Model\Author.cs" />

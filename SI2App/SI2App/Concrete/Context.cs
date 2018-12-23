@@ -7,79 +7,60 @@
 
     public class Context : IContext
     {
-        private string connectionString;
+        private readonly string connectionString;
         private SqlConnection con = null;
-
-        private IConferenceRepository _conferenceRepository;
-        private IAttendeeRepository _attendeeRepository;
-        private IArticleRepository _articleRepository;
-        private IReviewerRepository _reviewerRepository;
+        private readonly IReviewerRepository _reviewerRepository;
 
         public Context(string cs)
         {
-            connectionString = cs;
-            _conferenceRepository = new ConferenceRepository(this);
-            _attendeeRepository = new AttendeeRepository(this);
-            _articleRepository = new ArticleRepository(this);
-            _reviewerRepository = new ReviewerRepository(this);
+            this.connectionString = cs;
+            this.Conferences = new ConferenceRepository(this);
+            this.Users = new AttendeeRepository(this);
+            this.Articles = new ArticleRepository(this);
+            this._reviewerRepository = new ReviewerRepository(this);
         }
 
         public SqlCommand CreateCommand()
         {
             this.Open();
-            return con.CreateCommand();
+            return this.con.CreateCommand();
         }
 
         public void Dispose()
         {
-            if (con != null)
+            if (this.con != null)
             {
-                con.Dispose();
-                con = null;
+                this.con.Dispose();
+                this.con = null;
             }
         }
 
         public void EnlistTransaction()
         {
-            if (con != null)
+            if (this.con != null)
             {
-                con.EnlistTransaction(Transaction.Current);
+                this.con.EnlistTransaction(Transaction.Current);
             }
         }
 
         public void Open()
         {
-            if (con == null)
+            if (this.con == null)
             {
-                con = new SqlConnection(connectionString);
+                this.con = new SqlConnection(this.connectionString);
             }
-            if (con.State != ConnectionState.Open)
+            if (this.con.State != ConnectionState.Open)
             {
-                con.Open();
-            }
-        }
-
-        public IConferenceRepository Conferences
-        {
-            get
-            {
-                return _conferenceRepository;
+                this.con.Open();
             }
         }
 
-        public IAttendeeRepository Users
-        {
-            get => _attendeeRepository;
-        }
+        public IConferenceRepository Conferences { get; }
 
-        public IArticleRepository Articles
-        {
-            get => _articleRepository;
-        }
+        public IAttendeeRepository Users { get; }
 
-        public IReviewerRepository Reviewers
-        {
-            get => _reviewerRepository;
-        }
+        public IArticleRepository Articles { get; }
+
+        public IReviewerRepository Reviewers => this._reviewerRepository;
     }
 }

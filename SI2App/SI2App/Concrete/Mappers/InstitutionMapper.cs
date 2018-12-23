@@ -20,7 +20,7 @@
 
         protected override string SelectCommandText => $"{this.SelectAllCommandText} where id = @id";
 
-        protected override string UpdateCommandText => 
+        protected override string UpdateCommandText =>
             $@"update {this.Table} 
                 set 
                 name = isnull(@name, name), 
@@ -31,7 +31,7 @@
 
         protected override string DeleteCommandText => $"delete from {this.Table} where id = @id";
 
-        protected override string InsertCommandText => 
+        protected override string InsertCommandText =>
             $"insert into {this.Table} (name, address, country, acronym) values (@name, @address, @country, @acronym); select @id = scope_identity()";
 
         protected override void DeleteParameters(IDbCommand command, Institution entity) => command.Parameters.Add(new SqlParameter("@id", entity.Id));
@@ -63,7 +63,7 @@
             command.Parameters.AddRange(parameters);
         }
 
-        protected override Institution Map(IDataRecord record) => 
+        protected override Institution Map(IDataRecord record) =>
             new Institution
             {
                 Id = record.GetInt32(0),

@@ -1,11 +1,7 @@
 ﻿using SI2App.Concrete.Mappers;
 using SI2App.Dal;
 using SI2App.Model;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SI2App.Mapper.Proxy
 {
@@ -30,7 +26,7 @@ namespace SI2App.Mapper.Proxy
             {
                 if(base.Attendees == null)
                 {
-                    ConferenceMapper cm = new ConferenceMapper(context);
+                    var cm = new ConferenceMapper(context);
                     base.Attendees = cm.LoadAttendees(this);
                 }
                 return base.Attendees;
@@ -44,7 +40,7 @@ namespace SI2App.Mapper.Proxy
             {
                 if(base.Articles == null)
                 {
-                    ConferenceMapper cm = new ConferenceMapper(context);
+                    var cm = new ConferenceMapper(context);
                     base.Articles = cm.LoadArticles(this);
                 }
                 return base.Attendees

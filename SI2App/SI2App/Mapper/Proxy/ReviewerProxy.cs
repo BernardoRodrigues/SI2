@@ -1,11 +1,7 @@
 ﻿using SI2App.Concrete.Mappers;
 using SI2App.Dal;
 using SI2App.Model;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SI2App.Mapper.Proxy
 {
@@ -27,7 +23,7 @@ namespace SI2App.Mapper.Proxy
             {
                 if(base.Articles == null)
                 {
-                    ReviewerMapper rm = new ReviewerMapper(context);
+                    var rm = new ReviewerMapper(context);
                     base.Articles = rm.LoadArticles(this);
                 }
                 return base.Articles;

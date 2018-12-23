@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Configuration;
 using SI2App.Concrete;
 
@@ -39,7 +37,7 @@ namespace SI2App
         private static void UpdateConference()
         {
            
-            using (Context ctx = new Context(connectionString))
+            using (var ctx = new Context(connectionString))
             {
                 var repo = ctx.Conferences;
                 var first = repo.FindAll().First();
@@ -54,11 +52,11 @@ namespace SI2App
         private static void GiveRoleToUser()
         {
            
-            using (Context ctx = new Context(connectionString))
+            using (var ctx = new Context(connectionString))
             {
 
                 var repo = ctx.Users;
-                var user = repo.Find(u => u.Email.Equals("0000@isel.ipl.pt")).First();
+                var user = repo.Find(new Clauses().Equals("0000@isel.ipl.pt", "email")).First();
                 repo.GiveRole(user, 0);
                 Console.WriteLine($"{user.Name} is now a Reviewer");
                 Console.ReadKey();
@@ -69,7 +67,7 @@ namespace SI2App
 
         private static void ListCompatibleReviewers()
         {
-            using (Context ctx = new Context(connectionString))
+            using (var ctx = new Context(connectionString))
             {
 
                 var repo = ctx.Articles;
@@ -85,7 +83,7 @@ namespace SI2App
 
         private static void GiveRevision()
         {
-            using (Context ctx = new Context(connectionString))
+            using (var ctx = new Context(connectionString))
             {
                 var articles = ctx.Articles;
                 var reviewers = ctx.Reviewers;
@@ -98,7 +96,7 @@ namespace SI2App
         }
         private static void RegisterRevision()
         {
-            using (Context ctx = new Context(connectionString))
+            using (var ctx = new Context(connectionString))
             {
                 var articles = ctx.Articles;
                 articles.RegisterRevision(1, "Success", 100);
@@ -108,7 +106,7 @@ namespace SI2App
         }
         private static void AcceptedSubmissionsInPercentage()
         {
-            using(Context ctx = new Context(connectionString))
+            using(var ctx = new Context(connectionString))
             {
                 var conferences = ctx.Conferences;
                 var first = conferences.FindAll().First();
@@ -118,15 +116,15 @@ namespace SI2App
             }
         }
 
-        private static void clearConsole()
+        private static void ClearConsole()
         {
-            for (int y = 0; y < 25; y++) //console is 80 columns and 25 lines
+            for (var y = 0; y < 25; y++) //console is 80 columns and 25 lines
                 Console.WriteLine("\n");
         }
 
-        private static Option showMenu()
+        private static Option ShowMenu()
         {
-            Option userInput = Option.Unknown;
+            var userInput = Option.Unknown;
 
             Console.WriteLine("1. Sair");
             Console.WriteLine("2. Actualizar uma conferência");
@@ -144,14 +142,14 @@ namespace SI2App
         {
             init();
 
-            Option userInput = Option.Unknown;
+            var userInput = Option.Unknown;
             do
             {
                 try
                 {
-                    userInput = showMenu();
+                    userInput = ShowMenu();
                     methods[userInput]();
-                    clearConsole();
+                    ClearConsole();
                 }catch(Exception e)
                 {
                     Console.WriteLine($"Error : {e.Message}");

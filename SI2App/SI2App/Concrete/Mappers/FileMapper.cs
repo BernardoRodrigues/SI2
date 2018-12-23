@@ -20,11 +20,7 @@
 
         protected override string SelectCommandText => $"{this.SelectAllCommandText} where id = @id AND articleId = @articleId";
 
-<<<<<<< HEAD
         protected override string UpdateCommandText => throw new InvalidOperationException("File does not need updates");
-=======
-        protected override string UpdateCommandText => "Update dbo.[File] set [file]=@file , insertionDate=@insertionDate where id = @id AND articleId = @articleId";
->>>>>>> 990cce7b3d8687393f96f26cd9e0ae0af57235e0
 
         protected override string DeleteCommandText => "DeleteFile";
 
@@ -34,21 +30,8 @@
 
         protected override CommandType InsertCommandType => CommandType.StoredProcedure;
 
-<<<<<<< HEAD
         protected override void DeleteParameters(IDbCommand command, File entity) => command.Parameters.Add(new SqlParameter("@articleId", entity.ArticleId));
-=======
-        protected override void DeleteParameters(IDbCommand command, File entity)
-        {
-            SqlParameter p1 = new SqlParameter("@id", entity.Id);
-            SqlParameter p2 = new SqlParameter("@articleId", entity.ArticleId);
-            List<SqlParameter> parameters = new List<SqlParameter>()
-            {
-                p1, p2
-            };
-            command.Parameters.AddRange(parameters);
-        }
 
->>>>>>> 990cce7b3d8687393f96f26cd9e0ae0af57235e0
         protected override void InsertParameters(IDbCommand command, File entity)
         {
             var articleId = new SqlParameter("@articleId", entity.ArticleId);

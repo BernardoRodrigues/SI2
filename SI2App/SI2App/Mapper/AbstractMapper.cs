@@ -1,6 +1,5 @@
 ﻿namespace SI2App.Mapper
 {
-    using SI2App.Concrete;
     using SI2App.Dal;
     using System;
     using System.Collections.Generic;
@@ -162,7 +161,6 @@
             }
         }
 
-<<<<<<< HEAD
         public virtual TCol ReadWhere(Clauses clauses)
         {
             this.EnsureContext();
@@ -177,7 +175,6 @@
                 }
             }
         }
-=======
         protected void ExecuteNonQuery(String commandText, List<IDataParameter> parameters)
         {
             using (IDbCommand cmd = context.CreateCommand())
@@ -196,6 +193,5 @@
             if (entity == null)
                 throw new ArgumentException($"The {type} to delete cannot be null");
         }
->>>>>>> 990cce7b3d8687393f96f26cd9e0ae0af57235e0
     }
 }

@@ -15,7 +15,7 @@
         {
         }
 
-<<<<<<< HEAD
+        #region LOADER METHODS  
         internal List<Conference> LoadConferences(Attendee attendee)
         {
             var conferences = new List<Conference>();
@@ -33,41 +33,20 @@
             return conferences;
         }
 
-        protected override string Table => "User";
-=======
-        #region LOADER METHODS  
-        internal List<Conference> LoadConferences(Attendee a)
-        {
-            List<Conference> res = new List<Conference>();
-            ConferenceMapper cm = new ConferenceMapper(context);
-            List<IDataParameter> parameters = new List<IDataParameter>();
-            parameters.Add(new SqlParameter("@id", a.Id));
-            var query = "Select conferenceId from dbo.ConferenceUser where userId=@id";
-            using (IDataReader reader = ExecuteReader(query, parameters))
-            {
-                while (reader.Read())
-                {
-                    int key = reader.GetInt32(0);
-                    res.Add(cm.Read(key));
-                }
-            }
-            return res;
-        }
 
-        
 
         internal Institution LoadInstitution(Attendee a)
         {
             Institution institution = null;
-            InstitutionMapper im = new InstitutionMapper(context);
-            List<IDataParameter> parameters = new List<IDataParameter>();
+            var im = new InstitutionMapper(context);
+            var parameters = new List<IDataParameter>();
             parameters.Add(new SqlParameter("@id", a.Id));
             var query = "Select institutionId from [User] where id=@id";
-            using (IDataReader rd = ExecuteReader(query, parameters))
+            using (var rd = ExecuteReader(query, parameters))
             {
                 while (rd.Read())
                 {
-                    int key = rd.GetInt32(0);
+                    var key = rd.GetInt32(0);
                     institution = im.Read(key);
                 }
             }
@@ -81,19 +60,19 @@
         {
             CheckEntityForNull(entity, typeof(Attendee));
 
-            using(TransactionScope ts = new TransactionScope(TransactionScopeOption.Required))
+            using(var ts = new TransactionScope(TransactionScopeOption.Required))
             {
                 EnsureContext();
                 context.EnlistTransaction();
                 var conferences = entity.Conferences;
                 if(conferences != null && conferences.Count > 0)
                 {
-                    SqlParameter p = new SqlParameter("@userId", entity.Id);
-                    List<IDataParameter> parameters = new List<IDataParameter>();
+                    var p = new SqlParameter("@userId", entity.Id);
+                    var parameters = new List<IDataParameter>();
                     parameters.Add(p);
                     ExecuteNonQuery("delete from dbo.ConferenceUser where userId=@userId", parameters);
                 }
-                Attendee del = base.Delete(entity);
+                var del = base.Delete(entity);
                 ts.Complete();
                 return del;
             }
@@ -106,7 +85,7 @@
             {
                 command.CommandType = System.Data.CommandType.StoredProcedure;
                 command.CommandText = "GiveRoleToUser";
-                List<SqlParameter> parameters = new List<SqlParameter>
+                var parameters = new List<SqlParameter>
                 {
                     new SqlParameter("@userId", user.Id),
                     new SqlParameter("@role", role)
@@ -117,7 +96,6 @@
             
         }
         protected override string Table => "[User]";
->>>>>>> 990cce7b3d8687393f96f26cd9e0ae0af57235e0
 
         protected override string SelectAllCommandText => $"select id, name, email, institutionId from {this.Table}";
 
@@ -142,10 +120,7 @@
             var email = new SqlParameter("@email", entity.Email);
             var institutionId = new SqlParameter("@institutionId", entity.Institution == null ? null : entity.Institution.Id);
             var name = new SqlParameter("@name", entity.Name);
-<<<<<<< HEAD
             var conferenceId = new SqlParameter("@conferenceId", entity.Conferences[0]);
-=======
->>>>>>> 990cce7b3d8687393f96f26cd9e0ae0af57235e0
             var id = new SqlParameter("@id", DbType.Int32)
             {
                 Direction = ParameterDirection.InputOutput
@@ -166,8 +141,9 @@
             command.Parameters.AddRange(parameters);
         }
 
-        protected override Attendee Map(IDataRecord record) {
-            Attendee a = new Attendee
+        protected override Attendee Map(IDataRecord record)
+        {
+            var a = new Attendee
             {
                 Id = record.GetInt32(0),
                 Email = record.GetString(2),
@@ -175,7 +151,7 @@
             };
             return new AttendeeProxy(a, context);
         }
-           
+
         protected override void SelectParameters(IDbCommand command, int? id) => command.Parameters.Add(new SqlParameter("@id", id));
 
         protected override Attendee UpdateEntityId(IDbCommand command, Attendee entity)

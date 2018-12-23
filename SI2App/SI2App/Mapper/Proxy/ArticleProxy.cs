@@ -1,11 +1,7 @@
 ﻿using SI2App.Concrete.Mappers;
 using SI2App.Dal;
 using SI2App.Model;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SI2App.Mapper
 {
@@ -31,7 +27,7 @@ namespace SI2App.Mapper
             {
                 if(base.Conference == null)
                 {
-                    ArticleMapper am = new ArticleMapper(context);
+                    var am = new ArticleMapper(context);
                     base.Conference = am.LoadConference(this);
                 }
                 return base.Conference;
@@ -45,7 +41,7 @@ namespace SI2App.Mapper
             {
                 if(base.Authors == null)
                 {
-                    ArticleMapper am = new ArticleMapper(context);
+                    var am = new ArticleMapper(context);
                     base.Authors = am.LoadAuthors(this);
                 }
                 return base.Authors;
@@ -60,7 +56,7 @@ namespace SI2App.Mapper
             {
                 if(base.Reviewers == null)
                 {
-                    ArticleMapper am = new ArticleMapper(context);
+                    var am = new ArticleMapper(context);
                     base.Reviewers = am.LoadReviewers(this);
                 }
                 return base.Reviewers;
@@ -75,7 +71,7 @@ namespace SI2App.Mapper
             {
                 if(base.Files == null)
                 {
-                    ArticleMapper am = new ArticleMapper(context);
+                    var am = new ArticleMapper(context);
                     base.Files = am.LoadFiles(this);
                 }
                 return base.Files;

@@ -3,9 +3,7 @@
     using SI2App.Concrete.Mappers;
     using SI2App.Dal;
     using SI2App.Model;
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     public class AttendeeRepository : IAttendeeRepository
     {
@@ -18,8 +16,6 @@
             this.Mapper = new AttendeeMapper(context);
         }
 
-        public IEnumerable<Attendee> Find(Func<Attendee, bool> criteria) => this.FindAll().Where(criteria);
-
         public IEnumerable<Attendee> FindAll() => this.Mapper.ReadAll();
 
         public IEnumerable<Attendee> Find(Clauses clauses) => this.Mapper.ReadWhere(clauses);
@@ -29,5 +25,7 @@
         public Attendee Update(Attendee entity) => this.Mapper.Update(entity);
 
         public Attendee Create(Attendee entity) => this.Mapper.Create(entity);
+
+        public void GiveRole(Attendee user, int role) => this.Mapper.GiveRoleToUser(user, role);
     }
 }

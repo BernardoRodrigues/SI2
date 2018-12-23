@@ -7,11 +7,15 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
-    using System.Transactions;
 
     public class AuthorMapper : AbstractMapper<Author, int?, List<Author>>, IAuthorMapper
-    {
+    {   
 
+        public AuthorMapper(IContext context) : base(context)
+        {
+        }
+
+        #region LOADER METHODS
         internal List<Article> LoadArticles(Author author)
         {
             var articles = new List<Article>();
@@ -28,55 +32,11 @@
             }
             return articles;
         }
-
-        public AuthorMapper(IContext context) : base(context)
-        {
-        }
-
-        #region LOADER METHODS
-        internal List<Article> LoadArticles(Author a)
-        {
-            List<Article> res = new List<Article>();
-            ArticleMapper am = new ArticleMapper(context);
-            List<IDataParameter> parameters = new List<IDataParameter>();
-            parameters.Add(new SqlParameter("@id", a.Id));
-            var query = "Select articleId from dbo.ArticleAuthor where authorId=@id";
-            using (IDataReader rd = ExecuteReader(query, parameters))
-            {
-                while (rd.Read())
-                {
-                    int key = rd.GetInt32(0);
-                    res.Add(am.Read(key));
-                }
-            }
-            return res;
-        }
         #endregion
-
-        public override Author Delete(Author entity)
-        {
-            CheckEntityForNull(entity, typeof(Author));
-            using (TransactionScope ts = new TransactionScope(TransactionScopeOption.Required))
-            {
-                EnsureContext();
-                context.EnlistTransaction();
-                var articles = entity.Articles;
-                if(articles != null && articles.Count > 0)
-                {
-                    SqlParameter p = new SqlParameter("@authorId", entity.Id);
-                    List<IDataParameter> parameters = new List<IDataParameter>();
-                    parameters.Add(p);
-                    ExecuteNonQuery("delete from dbo.ArticleAuthor where authorId=@authorId", parameters);
-                }
-                Author del = base.Delete(entity);
-                ts.Complete();
-                return del;
-            }
-        }
 
         protected override string Table => "Author";
 
-        protected override string SelectAllCommandText => 
+        protected override string SelectAllCommandText =>
             $"select [User].id as id, [User].name as name, [User].email as email, [User].institutionId as institutionId from {this.Table} inner join [User] on [User].id = Author.authorId";
 
         protected override string SelectCommandText => $"{this.SelectAllCommandText} where authorId = @id";
@@ -85,9 +45,13 @@
 
         protected override CommandType UpdateCommandType => CommandType.StoredProcedure;
 
-        protected override string DeleteCommandText => $"delete from {this.Table} where authorId = @id";
+        protected override string DeleteCommandText => "DeleteUser";
 
-        protected override string InsertCommandText => $"insert into {this.Table} (authorId) values (@id)";
+        protected override CommandType DeleteCommandType => CommandType.StoredProcedure;
+
+        protected override string InsertCommandText => "InsertUser";
+
+        protected override CommandType InsertCommandType => CommandType.StoredProcedure;
 
         protected override void DeleteParameters(IDbCommand command, Author entity) => this.SelectParameters(command, entity.Id);
 
@@ -95,7 +59,7 @@
 
         protected override Author Map(IDataRecord record)
         {
-            Author a = new Author
+            var a = new Author
             {
                 Id = record.GetInt32(0),
                 Name = record.GetString(1),
@@ -104,7 +68,7 @@
             return new AuthorProxy(a, context);
         }
 
-        protected override void SelectParameters(IDbCommand command, int? id) => 
+        protected override void SelectParameters(IDbCommand command, int? id) =>
             command.Parameters.Add(new SqlParameter("@id", id));
 
         protected override Author UpdateEntityId(IDbCommand command, Author entity)

@@ -16,11 +16,7 @@
 
         public Attendee()
         {
-<<<<<<< HEAD
             this.Conferences = new List<Conference>();
-=======
-            Conferences = new List<Conference>();
->>>>>>> 990cce7b3d8687393f96f26cd9e0ae0af57235e0
         }
     }
 }

@@ -21,9 +21,11 @@
         public virtual List<Attendee> Attendees { get; set; }
 
         public virtual List<Article> Articles { get; set; }
+
         public Conference()
         {
             this.Attendees = new List<Attendee>();
+            this.Articles = new List<Article>();
         }
 
     }

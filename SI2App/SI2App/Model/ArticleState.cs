@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SI2App.Model
+﻿namespace SI2App.Model
 {
     public enum ArticleState : int
     {

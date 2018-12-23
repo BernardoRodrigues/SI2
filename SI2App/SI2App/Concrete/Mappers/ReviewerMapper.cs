@@ -7,10 +7,15 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
-    using System.Transactions;
 
     public class ReviewerMapper : AbstractMapper<Reviewer, int?, List<Reviewer>>, IReviewerMapper
     {
+
+        public ReviewerMapper(IContext context) : base(context)
+        {
+        }
+
+        #region LOADER METHODS
         internal List<Article> LoadArticles(Reviewer reviewer)
         {
             var articles = new List<Article>();
@@ -27,52 +32,7 @@
             }
             return articles;
         }
-
-
-        public ReviewerMapper(IContext context) : base(context)
-        {
-        }
-
-        #region LOADER METHODS
-        internal List<Article> LoadArticles(Reviewer r)
-        {
-            List<Article> res = new List<Article>();
-            ArticleMapper am = new ArticleMapper(context);
-            List<IDataParameter> parameters = new List<IDataParameter>();
-            parameters.Add(new SqlParameter("@id", r.Id));
-            var query = "Select articleId from dbo.ArticleReviewer where reviewerId=@id";
-            using(IDataReader rd = ExecuteReader(query, parameters))
-            {
-                while (rd.Read())
-                {
-                    int key = rd.GetInt32(0);
-                    res.Add(am.Read(key));
-                }
-            }
-            return res;
-        }
         #endregion
-
-        public override Reviewer Delete(Reviewer entity)
-        {
-            CheckEntityForNull(entity, typeof(Reviewer));
-            using (TransactionScope ts = new TransactionScope(TransactionScopeOption.Required))
-            {
-                EnsureContext();
-                context.EnlistTransaction();
-                var articles = entity.Articles;
-                if (articles != null && articles.Count > 0)
-                {
-                    SqlParameter p = new SqlParameter("@reviewerId", entity.Id);
-                    List<IDataParameter> parameters = new List<IDataParameter>();
-                    parameters.Add(p);
-                    ExecuteNonQuery("delete from dbo.ArticleReviewer where reviewerId=@reviewerId", parameters);
-                }
-                Reviewer del = base.Delete(entity);
-                ts.Complete();
-                return del;
-            }
-        }
 
         protected override string Table => "Reviewer";
 
@@ -84,7 +44,7 @@
 
         protected override CommandType UpdateCommandType => CommandType.StoredProcedure;
 
-        protected override string DeleteCommandText => $"delete from {this.Table} where reviewerId = @id";
+        protected override string DeleteCommandText => "DeleteUser";
 
         protected override string InsertCommandText => $"insert into {this.Table} (reviewerId) values (@id)";
 
@@ -92,7 +52,6 @@
 
         protected override void InsertParameters(IDbCommand command, Reviewer entity) => this.SelectParameters(command, entity.Id);
 
-<<<<<<< HEAD
         protected override Reviewer Map(IDataRecord record) =>
             new ReviewerProxy
             (
@@ -102,20 +61,6 @@
                 record.GetInt32(3),
                 this.context
             );
-=======
-        protected override Reviewer Map(IDataRecord record)
-        {
-            Reviewer r = new Reviewer
-            {
-                Id = record.GetInt32(0),
-                Name = record.GetString(1),
-                Email = record.GetString(2),
-            };
->>>>>>> 990cce7b3d8687393f96f26cd9e0ae0af57235e0
-
-            return new ReviewerProxy(r, context);
-        }
-           
 
         protected override void SelectParameters(IDbCommand command, int? id) => command.Parameters.Add(new SqlParameter("@id", id));
 
